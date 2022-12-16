@@ -1,5 +1,6 @@
 require('dotenv').config();
 const fs = require('fs');
+const axios = require('axios');
 const { Client, GatewayIntentBits, EmbedBuilder, Presence, Collection, Interaction } = require('discord.js');
 const twitch = require('./twitch');
 const config = require('./config.json');
@@ -13,10 +14,10 @@ var worker = null;
 const keepAlive = () => {
 	let count = 0;
 	setInterval(() => {
-		require('node-fetch')(process.env.URL_FETCH).then(() => {
+		axios.get(process.env.URL_FETCH).then(() => {
 			console.log(`[${++count}] My ping is the following ${process.env.URL_FETCH}`);
 		})
-	}, 300000)
+	}, 300000);
 }
 
 const thread = async () => {

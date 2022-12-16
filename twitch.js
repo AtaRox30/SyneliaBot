@@ -3,34 +3,23 @@ const request = require("request");
 const fs = require('fs');
 
 const getToken = (callback) => {
-	const utcNow = new Date().toUTCString();
-	const utcDate = new Date(utcNow);
-	if(utcDate > new Date(config['TWITCH_EXPIRATION']))
-	{
-		const options = {
-			url: config.URL["GET_TOKEN"],
-			json: true,
-			body: {
-				client_id: process.env.TWITCH_CLIENT_ID,
-				client_secret: process.env.TWITCH_CLIENT_SECRET,
-				grant_type: 'client_credentials'
-			}
+	const options = {
+		url: config.URL["GET_TOKEN"],
+		json: true,
+		body: {
+			client_id: process.env.TWITCH_CLIENT_ID,
+			client_secret: process.env.TWITCH_CLIENT_SECRET,
+			grant_type: 'client_credentials'
 		}
-	
-		request.post(options, (err, res, body) => {
-			if(err) return console.error(err);
-	
-			config['TWITCH_ACCESS_TOKEN'] = body.access_token;
-			const expireUTC = utcDate.setSeconds(utcDate.getSeconds() + body.expires_in);
-			config['TWITCH_EXPIRATION'] = new Date(expireUTC);
-			fs.writeFileSync("./config.json", JSON.stringify(config, null, 4));
-			callback(body.access_token);
-		})
 	}
-	else
-	{
-		callback(config['TWITCH_ACCESS_TOKEN']);
-	}
+
+	request.post(options, (err, res, body) => {
+		if(err) return console.error(err);
+
+		config['TWITCH_ACCESS_TOKEN'] = body.access_token;
+		fs.writeFileSync("./config.json", JSON.stringify(config, null, 4));
+		callback(body.access_token);
+	})
 }
 
 const getVODPage = (at, pagination) => {
