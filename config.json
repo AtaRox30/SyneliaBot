@@ -1,0 +1,27 @@
+{
+    "TWITCH_ACCESS_TOKEN": "wc3tq2izqvzlxh568mciqa6d595p30",
+    "TWITCH_EXPIRATION": "2023-02-12T02:34:06.000Z",
+    "BROADCASTER": {
+        "ID": 107179030,
+        "NAME": "syneliasan"
+    },
+    "IS_LIVE": false,
+    "LAST_CHECKED": "2022-12-16T18:30:26.000Z",
+    "LAST_CHECK": "2022-12-15T07:32:52.000Z",
+    "URL": {
+        "GET_TOKEN": "https://id.twitch.tv/oauth2/token",
+        "GET_USER_ID": "https://api.twitch.tv/helix/users",
+        "GET_VIDEOS": "https://api.twitch.tv/helix/videos",
+        "GET_CLIPS": "https://api.twitch.tv/helix/clips",
+        "GET_CHANNELS": "https://api.twitch.tv/helix/search/channels",
+        "GET_GAMES": "https://api.twitch.tv/helix/games"
+    },
+    "DISCORD": {
+        "GUILD_ID": "748905165700202508",
+        "CHANNELS": {
+            "CLIPS": "748905166178091060",
+            "VOD": "748905166178091060",
+            "ONLINE": "748905166178091060"
+        }
+    }
+}
