@@ -1,35 +1,23 @@
-var express = require("express");
-var Cors = require("cors");
-var app = express();
 require('dotenv').config();
-var bodyParser = require("body-parser");
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(Cors());
 const fs = require('fs');
 const { Client, GatewayIntentBits, EmbedBuilder, Presence, Collection, Interaction } = require('discord.js');
 const twitch = require('./twitch');
 const config = require('./config.json');
-
-app.use(function (req, res, next) {
-	res.header("Access-Control-Allow-Origin", "*");
-	res.header("Access-Control-Allow-Methods", "DELETE,PUT,POST,GET,OPTIONS");
-	res.header(
-	  "Access-Control-Allow-Headers",
-	  "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-	);
-	next();
-});
-
-app.listen(4000, function () {
-	console.log("Node server running on port 4000");
-});
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages]
 });
 
 var worker = null;
+
+const keepAlive = () => {
+	let count = 0;
+	setInterval(() => {
+		require('node-fetch')(process.env.URL_FETCH).then(() => {
+			console.log(`[${++count}] My ping is the following ${process.env.URL_FETCH}`);
+		})
+	}, 300000)
+}
 
 const thread = async () => {
 	const channel = await checkStream();
@@ -209,3 +197,5 @@ client.on("ready", async () => {
 });
 
 client.login(process.env.DISCORD_BOT_TOKEN);
+
+keepAlive();
