@@ -15,9 +15,6 @@ const getToken = (callback) => {
 
 	request.post(options, (err, res, body) => {
 		if(err) return console.error(err);
-
-		config['TWITCH_ACCESS_TOKEN'] = body.access_token;
-		fs.writeFileSync("./config.json", JSON.stringify(config, null, 4));
 		callback(body.access_token);
 	})
 }

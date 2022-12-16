@@ -1,11 +1,10 @@
 {
-    "TWITCH_ACCESS_TOKEN": "403tpgyo2lxl7e16vppo94qy04m66j",
     "BROADCASTER": {
         "ID": 107179030,
         "NAME": "syneliasan"
     },
     "IS_LIVE": false,
-    "LAST_CHECKED": "2022-12-16T20:44:20.000Z",
+    "LAST_CHECKED": "2022-12-16T20:51:25.000Z",
     "LAST_CHECK": "2022-12-15T07:32:52.000Z",
     "URL": {
         "GET_TOKEN": "https://id.twitch.tv/oauth2/token",
