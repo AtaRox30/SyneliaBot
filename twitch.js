@@ -1,6 +1,5 @@
 const config = require("./config.json");
 const request = require("request");
-const fs = require('fs');
 
 const getToken = (callback) => {
 	const options = {
