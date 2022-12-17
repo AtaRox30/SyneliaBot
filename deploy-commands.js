@@ -68,7 +68,7 @@ const data = {
 				const color = new TextInputBuilder()
 					.setCustomId('COLOR')
 					// The label is the prompt the user sees for this input
-					.setLabel("Couleur HEX du message d'alerte")
+					.setLabel("Couleur HEX du message")
 					.setPlaceholder("FF0000")
 					// Short means only a single line of text
 					.setStyle(TextInputStyle.Short);
@@ -77,16 +77,16 @@ const data = {
 				const title = new TextInputBuilder()
 					.setCustomId('TITLE')
 					// The label is the prompt the user sees for this input
-					.setLabel("Titre de l'alerte")
-					.setPlaceholder("{{ CHANNEL_DISPLAY_NAME }} est en stream !")
+					.setLabel("Titre")
+					.setPlaceholder("$NOM est en stream !")
 					// Short means only a single line of text
 					.setStyle(TextInputStyle.Short);
 
 				// Create description
 				const description = new TextInputBuilder()
 					.setCustomId('DESCRIPTION')
-					.setLabel("Description de l'alerte")
-					.setPlaceholder("{{ CHANNEL_TITLE }}")
+					.setLabel("Description")
+					.setPlaceholder("[$JEU] $TITRE, rejoins-moi !")
 					// Paragraph means multiple lines of text.
 					.setStyle(TextInputStyle.Paragraph);
 
@@ -94,8 +94,8 @@ const data = {
 				const thumbnail = new TextInputBuilder()
 					.setCustomId('THUMBNAIL')
 					// The label is the prompt the user sees for this input
-					.setLabel("URL de la miniature de l'alerte")
-					.setPlaceholder("https://cdn.discordapp.com/attachments/709110645966110751/1053253703718686790/happy_ducky_.png")
+					.setLabel("URL de la miniature")
+					.setPlaceholder("$IMG")
 					// Short means only a single line of text
 					.setStyle(TextInputStyle.Short);
 
@@ -165,7 +165,7 @@ const data = {
 					.setThumbnail(replaceEnv(thumbnail))
 				
 				await interaction.reply({
-					content: 'Les paramètres d\'alerte ont été modifiés ! Voici l\'aperçu de l\'alerte.\n' + 
+					content: 'Les paramètres d\'alerte ont été modifiés ! Voici l\'aperçu.\n' + 
 					'(Tu peux utiliser les variables $TITRE (Titre du stream), $IMG (Image de profil), $NOM (Pseudo du streamer), $JEU (Nom du jeu))',
 					embeds: [embed],
 					ephemeral: true
