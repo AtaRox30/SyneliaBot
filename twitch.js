@@ -62,7 +62,7 @@ const getClipsPage = (at) => {
 
 const getStreamers = (at) => {
 	const options = {
-		url: config.URL["GET_CHANNELS"] + '?query=' + config["BROADCASTER"]["NAME"],
+		url: config.URL["GET_CHANNELS"] + '?query=' + config["BROADCASTER"]["LOGIN"],
 		json: true,
 		headers: {
 			'Client-Id': process.env.TWITCH_CLIENT_ID,
@@ -160,7 +160,7 @@ const twitch = {
 		return new Promise((resolve, reject) => {
 			getToken(async (at) => {
 				const aStreamers = await getStreamers(at);
-				const stream = aStreamers.data.filter(s => s.broadcaster_login === config["BROADCASTER"]["NAME"])[0];
+				const stream = aStreamers.data.filter(s => s.broadcaster_login === config["BROADCASTER"]["LOGIN"])[0];
 				resolve(stream);
 			});
 		});

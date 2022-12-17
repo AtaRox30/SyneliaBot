@@ -1,8 +1,9 @@
 require('dotenv').config();
 const fs = require('fs');
 const axios = require('axios');
-const { Client, GatewayIntentBits, EmbedBuilder, Presence, Collection, Interaction } = require('discord.js');
+const { Client, GatewayIntentBits, EmbedBuilder, REST, Routes, Events } = require('discord.js');
 const twitch = require('./twitch');
+const commandsManager = require('./deploy-commands');
 const config = require('./config.json');
 
 const client = new Client({
@@ -10,6 +11,8 @@ const client = new Client({
 });
 
 var worker = null;
+const commands = commandsManager.commands;
+const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN);
 
 const keepAlive = () => {
 	let count = 0;
@@ -71,19 +74,24 @@ const notifyStream = async (channel) => {
 			title: string
 		}
 	*/
+	const replaceEnv = (string) => string.replace("$TITRE", channel.title)
+		.replace("$IMG", channel.thumbnail_url)
+		.replace("$NOM", channel.display_name)
+		.replace("$JEU", channel.game_name);
+
 	const guild = client.guilds.cache.get(config["DISCORD"]["GUILD_ID"]);
 	const channelDisc = guild.channels.cache.get(config["DISCORD"]["CHANNELS"]["ONLINE"]);
-	const exampleEmbed = new EmbedBuilder()
-		.setColor(0xB00514)
-		.setTitle(channel.display_name + " est en stream !")
+	const embed = new EmbedBuilder()
+		.setColor(replaceEnv(config["STREAM_ALERT_MESSAGE"]["COLOR"]))
+		.setTitle(replaceEnv(config["STREAM_ALERT_MESSAGE"]["TITLE"]))
 		.setURL('https://www.twitch.tv/syneliasan')
 		.setAuthor({ name: channel.display_name, iconURL: channel.thumbnail_url, url: 'https://www.twitch.tv/syneliasan' })
-		.setDescription(channel.title)
-		.setThumbnail(channel.thumbnail_url)
+		.setDescription(replaceEnv(config["STREAM_ALERT_MESSAGE"]["DESCRIPTION"]))
+		.setThumbnail(replaceEnv(config["STREAM_ALERT_MESSAGE"]["THUMBNAIL"]))
 
 	channelDisc.send({
 		content: '@everyone',
-		embeds: [exampleEmbed]
+		embeds: [embed]
 	});
 }
 
@@ -192,11 +200,68 @@ const notifyClips = (channel, aClips) => {
 	});
 }
 
+const registerCommands = () => {
+	(async () => {
+		try {
+			console.log(`Started refreshing ${commands.length} application (/) commands.`);
+	
+			// The put method is used to fully refresh all commands in the guild with the current set
+			const data = await rest.put(
+				Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, config["DISCORD"]["GUILD_ID"]),
+				{ body: commands.map(v => v.data) },
+			);
+	
+			console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+		} catch (error) {
+			// And of course, make sure you catch and log any errors!
+			console.error(error);
+		}
+	})();
+}
+
+const commandsHandler = async (interaction) => {
+	const command = commands.filter(v => v.data.name === interaction.commandName);
+
+	if (!command.length) {
+		console.error(`No command matching ${interaction.commandName} was found.`);
+		return;
+	}
+
+	try {
+		await command[0].execute(client, interaction);
+	} catch (error) {
+		console.error(`Error executing ${interaction.commandName}`);
+		console.error(error);
+	}
+}
+
+const modalSubmitHandler = async (interaction) => {
+	const command = commands.filter(v => v.data.name === interaction.customId);
+
+	if (!command.length) {
+		console.error(`No command matching ${interaction.customId} was found.`);
+		return;
+	}
+
+	try {
+		await command[0].submit(interaction);
+	} catch (error) {
+		console.error(`Error executing ${interaction.customId}`);
+		console.error(error);
+	}
+}
+
 client.on("ready", async () => {
     console.log("Discord bot ready");
 	worker = setInterval(thread, 10000);
 });
 
+client.on(Events.InteractionCreate, async interaction => {
+	if(interaction.isChatInputCommand()) return commandsHandler(interaction);
+	if(interaction.isModalSubmit()) return modalSubmitHandler(interaction);
+});
+
 client.login(process.env.DISCORD_BOT_TOKEN);
 
 keepAlive();
+registerCommands();

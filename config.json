@@ -1,10 +1,10 @@
 {
     "BROADCASTER": {
         "ID": 107179030,
-        "NAME": "syneliasan"
+        "LOGIN": "syneliasan"
     },
     "IS_LIVE": false,
-    "LAST_CHECKED": "2022-12-16T20:51:25.000Z",
+    "LAST_CHECKED": "2022-12-17T18:50:41.000Z",
     "LAST_CHECK": "2022-12-15T07:32:52.000Z",
     "URL": {
         "GET_TOKEN": "https://id.twitch.tv/oauth2/token",
@@ -21,5 +21,11 @@
             "VOD": "748905166178091060",
             "ONLINE": "748905166178091060"
         }
+    },
+    "STREAM_ALERT_MESSAGE": {
+        "COLOR": "0xFF0000",
+        "TITLE": "Retrouve-moi sur $JEU !",
+        "DESCRIPTION": "$TITRE",
+        "THUMBNAIL": "$IMG"
     }
 }
