@@ -69,7 +69,8 @@ const data = {
 					.setCustomId('COLOR')
 					// The label is the prompt the user sees for this input
 					.setLabel("Couleur HEX du message")
-					.setPlaceholder(config["STREAM_ALERT_MESSAGE"]["COLOR"].slice(2))
+					.setPlaceholder("FF0000")
+					.setValue(config["STREAM_ALERT_MESSAGE"]["COLOR"].slice(2))
 					// Short means only a single line of text
 					.setStyle(TextInputStyle.Short);
 
@@ -79,6 +80,7 @@ const data = {
 					// The label is the prompt the user sees for this input
 					.setLabel("Titre")
 					.setPlaceholder("$NOM est en stream !")
+					.setValue(config["STREAM_ALERT_MESSAGE"]["TITLE"])
 					// Short means only a single line of text
 					.setStyle(TextInputStyle.Short);
 
@@ -86,7 +88,8 @@ const data = {
 				const description = new TextInputBuilder()
 					.setCustomId('DESCRIPTION')
 					.setLabel("Description")
-					.setPlaceholder("[$JEU] $TITRE, rejoins-moi !")
+					.setPlaceholder("[$JEU] $TITLE")
+					.setValue(config["STREAM_ALERT_MESSAGE"]["DESCRIPTION"])
 					// Paragraph means multiple lines of text.
 					.setStyle(TextInputStyle.Paragraph);
 
@@ -96,6 +99,7 @@ const data = {
 					// The label is the prompt the user sees for this input
 					.setLabel("URL de la miniature")
 					.setPlaceholder("$IMG")
+					.setValue(config["STREAM_ALERT_MESSAGE"]["THUMBNAIL"])
 					// Short means only a single line of text
 					.setStyle(TextInputStyle.Short);
 
