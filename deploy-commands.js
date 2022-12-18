@@ -69,7 +69,7 @@ const data = {
 					.setCustomId('COLOR')
 					// The label is the prompt the user sees for this input
 					.setLabel("Couleur HEX du message")
-					.setPlaceholder("FF0000")
+					.setPlaceholder(config["STREAM_ALERT_MESSAGE"]["COLOR"].slice(2))
 					// Short means only a single line of text
 					.setStyle(TextInputStyle.Short);
 
