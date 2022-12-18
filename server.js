@@ -91,7 +91,7 @@ const notifyStream = async (channel) => {
 		.setDescription(replaceEnv(config["STREAM_ALERT_MESSAGE"]["DESCRIPTION"]))
 		.setThumbnail(replaceEnv(config["STREAM_ALERT_MESSAGE"]["THUMBNAIL"]))
 
-	channelDisc.send({
+	await channelDisc.send({
 		content: '@everyone',
 		embeds: [embed]
 	});
@@ -139,7 +139,7 @@ const notifyVods = async (channel, aVods) => {
 			.setThumbnail(thumbGame)
 			.setImage(thumbVideo)
 
-		channelDisc.send({
+		await channelDisc.send({
 			embeds: [exampleEmbed]
 		});
 	});
@@ -196,7 +196,7 @@ const notifyClips = (channel, aClips) => {
 			.setThumbnail(thumbGame)
 			.setImage(thumbVideo)
 
-		channelDisc.send({
+		await channelDisc.send({
 			embeds: [exampleEmbed]
 		});
 	});
