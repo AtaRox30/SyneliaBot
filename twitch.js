@@ -135,7 +135,7 @@ const twitch = {
 					pagination = r.pagination.cursor;
 				}
 				while(pagination)
-				resolve(res.reverse());
+				resolve(res);
 			});
 		});
 	},
@@ -151,7 +151,7 @@ const twitch = {
 					pagination = r.pagination.cursor;
 				}
 				while(pagination)
-				resolve(res.reverse());
+				resolve(res);
 			});
 		});
 	},

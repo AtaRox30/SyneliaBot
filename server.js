@@ -5,6 +5,7 @@ const { Client, GatewayIntentBits, EmbedBuilder, REST, Routes, Events } = requir
 const twitch = require('./twitch');
 const commandsManager = require('./deploy-commands');
 const config = require('./config.json');
+const clips_vods = require('./clips-vods.json');
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages]
@@ -27,9 +28,6 @@ const thread = async () => {
 	const channel = await checkStream();
 	await checkVODS(channel);
 	await checkClips(channel);
-	const utcNow = new Date().toUTCString();
-	config["LAST_CHECKED"] = new Date(utcNow).toISOString();
-	fs.writeFileSync("./config.json", JSON.stringify(config, null, 4));
 };
 
 const checkStream = async () => {
@@ -46,22 +44,26 @@ const checkStream = async () => {
 
 const checkVODS = async (channel) => {
 	const aVods = await twitch.getVODS();
-	const aNotified = aVods.filter(v => new Date(v.published_at) > new Date(config["LAST_CHECKED"]));
+	const aNotified = aVods.filter(v => !clips_vods["VODS"].includes(v.id)).sort((a, b) => new Date(a.created_at) < new Date(b.created_at)).reverse();
 	if(aNotified.length)
 	{
 		//At least one video found, notify
 		notifyVods(channel, aNotified);
 	}
+	clips_vods["VODS"] = aVods.map(v => v.id);
+	fs.writeFileSync("./clips-vods.json", JSON.stringify(clips_vods, null, 4));
 }
 
 const checkClips = async (channel) => {
 	const aClips = await twitch.getClips();
-	const aNotified = aClips.filter(v => new Date(v.created_at) > new Date(config["LAST_CHECKED"]));
+	const aNotified = aClips.filter(v => !clips_vods["CLIPS"].includes(v.id)).sort((a, b) => new Date(a.created_at) < new Date(b.created_at)).reverse();
 	if(aNotified.length)
 	{
 		//At least one video found, notify
 		notifyClips(channel, aNotified);
 	}
+	clips_vods["CLIPS"] = aClips.map(v => v.id);
+	fs.writeFileSync("./clips-vods.json", JSON.stringify(clips_vods, null, 4));
 }
 
 const notifyStream = async (channel) => {
@@ -107,6 +109,7 @@ const notifyVods = async (channel, aVods) => {
 			}
 
 			vod {
+				id: string,
 				user_name: string,
 				title: string,
 				published_at: string,
@@ -137,7 +140,6 @@ const notifyVods = async (channel, aVods) => {
 			.setImage(thumbVideo)
 
 		channelDisc.send({
-			content: '@everyone',
 			embeds: [exampleEmbed]
 		});
 	});
@@ -155,6 +157,7 @@ const notifyClips = (channel, aClips) => {
 			}
 
 			clip {
+				id: string,
 				url: string,
 				broadcaster_name: string,
 				creator_name: string,
@@ -194,7 +197,6 @@ const notifyClips = (channel, aClips) => {
 			.setImage(thumbVideo)
 
 		channelDisc.send({
-			content: '@everyone',
 			embeds: [exampleEmbed]
 		});
 	});
