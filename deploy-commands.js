@@ -1,45 +1,83 @@
 const { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, EmbedBuilder } = require('discord.js');
 const config = require('./config.json');
 const fs = require('fs');
+// const Jimp = require('jimp');
 const twitch = require('./twitch');
 
-const sendToAuthor = (client, interaction, messageObject) => {
-	const user = interaction.user;
-	const guild = client.guilds.cache.get(interaction.guildId);
-	guild.members.cache.get(user.id).send(messageObject)
-}
+// const sendToAuthor = async (client, interaction, messageObject) => {
+// 	const user = interaction.user;
+// 	const guild = client.guilds.cache.get(interaction.guildId);
+// 	await guild.members.cache.get(user.id).send(messageObject)
+// }
+
+// function fill(color) {
+//     return function (x, y, offset) {
+//       this.bitmap.data.writeUInt32BE(color, offset, true);
+//     }
+// }
+
+// const buildIngredientsRecapImage = async (userId) => {
+// 	let width = 205;
+//     let height = 30 + 5 * 20;
+// 	return new Promise((res, rej) => {
+// 		new Jimp(width, height, "white", async function(err, image) {
+// 			if(err) rej(err);
+// 			const font = await Jimp.loadFont(Jimp.FONT_SANS_12_BLACK);
+// 			image.print(font, 20, 2, "Rang");
+// 			image.print(font, 70, 2, "Pseudo");
+// 			image.print(font, 150, 2, "Points");
+// 			image.scan(0, 20, width, 1, fill("black"));
+// 			let y = 25;
+// 			for(let i = 0; i < 5; i++) {
+// 				image.print(font, 30, y, "1000");
+// 				image.print(font, 70, y, "1000");
+// 				image.print(font, 165, y, "1000");
+// 				y += 20;
+// 			}
+	
+// 			await image.writeAsync("./classement.png");
+// 			res(true);
+// 		});
+// 	});
+// }
 
 const data = {
 	"commands": [
-		// Link Twitch account
-		{
-			data: new SlashCommandBuilder().setName('link').setDescription('Lie votre compte Twitch à Discord'),
-			execute: async (client, interaction) => {
-				// sendToAuthor(client, interaction, "test");
-				await interaction.reply({ content: 'La commande est en travaux !', ephemeral: true });
-			},
-		},
-		// View recipes
-		{
-			data: new SlashCommandBuilder().setName('recipes').setDescription('Consultation des recettes disponible'),
-			execute: async (client, interaction) => {
-				await interaction.reply({ content: 'La commande est en travaux !', ephemeral: true });
-			},
-		},
-		// View ingredients in stocks
-		{
-			data: new SlashCommandBuilder().setName('ingredients').setDescription('Consultation des ingredients en votre possession'),
-			execute: async (client, interaction) => {
-				await interaction.reply({ content: 'La commande est en travaux !', ephemeral: true });
-			},
-		},
-		// Infuse
-		{
-			data: new SlashCommandBuilder().setName('infusion').setDescription('Infusion d\'un thé avec vos ingredients'),
-			execute: async (client, interaction) => {
-				await interaction.reply({ content: 'La commande est en travaux !', ephemeral: true });
-			},
-		},
+		// // Link Twitch account
+		// {
+		// 	data: new SlashCommandBuilder().setName('link').setDescription('Lie votre compte Twitch à Discord'),
+		// 	execute: async (client, interaction) => {
+		// 		// sendToAuthor(client, interaction, "test");
+		// 		await interaction.reply({ content: 'La commande est en travaux !', ephemeral: true });
+		// 	},
+		// },
+		// // View recipes
+		// {
+		// 	data: new SlashCommandBuilder().setName('recipes').setDescription('Consultation des recettes disponible'),
+		// 	execute: async (client, interaction) => {
+		// 		await interaction.reply({ content: 'Vos ingredients vous ont été envoyés en privé', ephemeral: true });
+		// 	},
+		// },
+		// // View ingredients in stocks
+		// {
+		// 	data: new SlashCommandBuilder().setName('ingredients').setDescription('Consultation des ingredients en votre possession'),
+		// 	execute: async (client, interaction) => {
+		// 		await buildIngredientsRecapImage(interaction.user.id);
+		// 		await sendToAuthor(client, interaction, {
+		// 			content: "Voici les ingredients en votre possession",
+		// 			files: ["./classement.png"]
+		// 		});
+		// 		fs.unlink("./classement.png", function() {});
+		// 		await interaction.reply({ content: 'Vos ingredients vous ont été envoyés en privé', ephemeral: true });
+		// 	},
+		// },
+		// // Infuse
+		// {
+		// 	data: new SlashCommandBuilder().setName('infusion').setDescription('Infusion d\'un thé avec vos ingredients'),
+		// 	execute: async (client, interaction) => {
+		// 		await interaction.reply({ content: 'La commande est en travaux !', ephemeral: true });
+		// 	},
+		// },
 		// Set up stream alert
 		{
 			data: new SlashCommandBuilder().setName('setup-stream').setDescription('Paramètrage des alertes de live'),

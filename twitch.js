@@ -3,7 +3,7 @@ const request = require("request");
 
 const getToken = (callback) => {
 	const options = {
-		url: config.URL["GET_TOKEN"],
+		url: config.URL["TWITCH"]["GET_TOKEN"],
 		json: true,
 		body: {
 			client_id: process.env.TWITCH_CLIENT_ID,
@@ -20,7 +20,7 @@ const getToken = (callback) => {
 
 const getVODPage = (at, pagination) => {
 	const options = {
-		url: config.URL["GET_VIDEOS"] + '?user_id=' + config["BROADCASTER"]["ID"] + (pagination ? ('&after=' + pagination) : '') + '&sort=time',
+		url: config.URL["TWITCH"]["GET_VIDEOS"] + '?user_id=' + config["BROADCASTER"]["ID"] + (pagination ? ('&after=' + pagination) : '') + '&sort=time',
 		json: true,
 		headers: {
 			'Client-Id': process.env.TWITCH_CLIENT_ID,
@@ -41,7 +41,7 @@ const getVODPage = (at, pagination) => {
 
 const getClipsPage = (at) => {
 	const options = {
-		url: config.URL["GET_CLIPS"] + '?broadcaster_id=' + config["BROADCASTER"]["ID"] + '&sort=time',
+		url: config.URL["TWITCH"]["GET_CLIPS"] + '?broadcaster_id=' + config["BROADCASTER"]["ID"] + '&sort=time',
 		json: true,
 		headers: {
 			'Client-Id': process.env.TWITCH_CLIENT_ID,
@@ -62,7 +62,7 @@ const getClipsPage = (at) => {
 
 const getStreamers = (at) => {
 	const options = {
-		url: config.URL["GET_CHANNELS"] + '?query=' + config["BROADCASTER"]["LOGIN"],
+		url: config.URL["TWITCH"]["GET_CHANNELS"] + '?query=' + config["BROADCASTER"]["LOGIN"],
 		json: true,
 		headers: {
 			'Client-Id': process.env.TWITCH_CLIENT_ID,
@@ -83,7 +83,7 @@ const getStreamers = (at) => {
 
 const getGames = (at, id) => {
 	const options = {
-		url: config.URL["GET_GAMES"] + '?id=' + id,
+		url: config.URL["TWITCH"]["GET_GAMES"] + '?id=' + id,
 		json: true,
 		headers: {
 			'Client-Id': process.env.TWITCH_CLIENT_ID,
@@ -104,12 +104,29 @@ const getGames = (at, id) => {
 
 const getUsers = (at, id) => {
 	const options = {
-		url: config.URL["GET_USER_ID"] + '?id=' + id,
+		url: config.URL["TWITCH"]["GET_USER_ID"] + '?id=' + id,
 		json: true,
 		headers: {
 			'Client-Id': process.env.TWITCH_CLIENT_ID,
 			'Authorization': 'Bearer ' + at
 		}
+	}
+
+	return new Promise(function(resolve, reject) {
+		request.get(options, (err, res, body) => {
+			if (!err && res.statusCode === 200) {
+				resolve(body);
+			} else {
+				reject(err);
+			}
+		})
+	});
+}
+
+const getChatters = () => {
+	const options = {
+		url: "https://tmi.twitch.tv/group/user/" + config["BROADCASTER"]["LOGIN"] + "/chatters",
+		json: true
 	}
 
 	return new Promise(function(resolve, reject) {
@@ -182,6 +199,11 @@ const twitch = {
 				resolve(users.data[0]);
 			});
 		});
+	},
+
+	getChatters: async () => {
+		const users = await getChatters();
+		return users.chatters.viewers;
 	},
 }
 

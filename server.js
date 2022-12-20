@@ -5,14 +5,16 @@ const { Client, GatewayIntentBits, EmbedBuilder, REST, Routes, Events } = requir
 const twitch = require('./twitch');
 const commandsManager = require('./deploy-commands');
 const config = require('./config.json');
-const clips_vods = require('./clips-vods.json');
+// const ingredients = require('./ingredients.json');
+// const teaGameManager = require('./tea-game.json');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages]
 });
 
-var worker = null;
 const commands = commandsManager.commands;
+// const drinkers = teaGameManager.data;
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN);
 
 const keepAlive = () => {
@@ -24,47 +26,103 @@ const keepAlive = () => {
 	}, 300000);
 }
 
-const thread = async () => {
+const getGlobalInfo = async () => {
+	const clientDB = new MongoClient(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+	await clientDB.connect();
+	const collection = await clientDB.db("discord_bot").collection("global_info");
+	const cursor = await collection.find({ "name_id" : config["MONGO"]["NAME"] });
+	const toRet = (await cursor.toArray())[0];
+	await clientDB.close();
+	return toRet;
+}
+
+const setGlobalInfo = async (document) => {
+	const clientDB = new MongoClient(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+	await clientDB.connect();
+	const collection = await clientDB.db("discord_bot").collection("global_info");
+	const cursor = await collection.updateOne({ "name_id" : config["MONGO"]["NAME"] }, { "$set": document });
+	return cursor;
+}
+
+const twitchStreamChecker = async () => {
 	const channel = await checkStream();
-	await checkVODS(channel);
-	await checkClips(channel);
+	// checkVODS(channel);
+	checkClips(channel);
+};
+
+const twitchChatChecker = async () => {
+	const tenDrinker = await distributePoint();
+	await distributeIngredient(tenDrinker);
 };
 
 const checkStream = async () => {
 	const channel = await twitch.getChannel();
-	if(!config["IS_LIVE"] && channel.is_live)
+	const info = await getGlobalInfo();
+	if(!info.is_live && channel.is_live)
 	{
 		//Streamer wasn't streaming the last time we checked, but is streaming now, so we send
 		notifyStream(channel);
 	}
-	config["IS_LIVE"] = channel.is_live;
-	fs.writeFileSync("./config.json", JSON.stringify(config, null, 4));
+	setGlobalInfo({ "is_live" : channel.is_live });
 	return channel;
 }
 
 const checkVODS = async (channel) => {
 	const aVods = await twitch.getVODS();
-	const aNotified = aVods.filter(v => !clips_vods["VODS"].includes(v.id)).sort((a, b) => new Date(a.created_at) < new Date(b.created_at)).reverse();
+	const info = await getGlobalInfo();
+	const aNotified = aVods.filter(v => !info.vods.includes(v.id)).sort((a, b) => new Date(a.created_at) < new Date(b.created_at)).reverse();
 	if(aNotified.length)
 	{
 		//At least one video found, notify
 		notifyVods(channel, aNotified);
 	}
-	clips_vods["VODS"] = aVods.map(v => v.id);
-	fs.writeFileSync("./clips-vods.json", JSON.stringify(clips_vods, null, 4));
+	setGlobalInfo({ "vods" : aVods.map(v => v.id) });
 }
 
 const checkClips = async (channel) => {
 	const aClips = await twitch.getClips();
-	const aNotified = aClips.filter(v => !clips_vods["CLIPS"].includes(v.id)).sort((a, b) => new Date(a.created_at) < new Date(b.created_at)).reverse();
+	const info = await getGlobalInfo();
+	const aNotified = aClips.filter(v => !info.clips.includes(v.id)).sort((a, b) => new Date(a.created_at) < new Date(b.created_at)).reverse();
 	if(aNotified.length)
 	{
 		//At least one video found, notify
 		notifyClips(channel, aNotified);
 	}
-	clips_vods["CLIPS"] = aClips.map(v => v.id);
-	fs.writeFileSync("./clips-vods.json", JSON.stringify(clips_vods, null, 4));
+	setGlobalInfo({ "clips" : aClips.map(v => v.id) });
 }
+
+// const distributePoint = async () => {
+// 	// const chatters = await twitch.getChatters();
+// 	const chatters = ["atarox30"];
+// 	const ret = [];
+// 	chatters.forEach(chatter => {
+// 		const drinker = drinkers.filter(v => v.twitch.login === chatter);
+// 		if(!drinker.length) return
+// 		drinker[0].points = drinker[0].points + 1;
+// 		if(drinker[0].points >= 10) ret.push(drinker[0]);
+// 		fs.writeFileSync("./tea-game.json", JSON.stringify(teaGameManager, null, 4));
+// 	});
+// 	return ret;
+// }
+
+// const distributeIngredient = async (worthDrinkers) => {
+// 	worthDrinkers.forEach(v => {
+// 		const ingredient = getRandomIngredient();
+// 		v.points = 0;
+// 		v.ingredients[ingredient] = (v.ingredients[ingredient] ?? 0) + 1;
+// 		fs.writeFileSync("./tea-game.json", JSON.stringify(teaGameManager, null, 4));
+// 	});
+// }
+
+// const getRandomIngredient = () => {
+// 	const toGive = [];
+// 	Object.entries(ingredients).forEach(k => {
+// 		for(let i = 0; i < k[1].weight; i++) toGive.push(k[0]);
+// 	});
+// 	toGive.sort((a, b) => 0.5 - Math.random());
+// 	const ingredient = toGive[Math.floor(Math.random() * toGive.length)]
+// 	return ingredient;
+// }
 
 const notifyStream = async (channel) => {
 	/*
@@ -255,7 +313,8 @@ const modalSubmitHandler = async (interaction) => {
 
 client.on("ready", async () => {
     console.log("Discord bot ready");
-	worker = setInterval(thread, 10000);
+	setInterval(twitchStreamChecker, 10000);
+	// setInterval(twitchChatChecker, 60000);
 });
 
 client.on(Events.InteractionCreate, async interaction => {
