@@ -28,8 +28,8 @@ const keepAlive = () => {
 const getGlobalInfo = async () => {
 	const clientDB = new MongoClient(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 	await clientDB.connect();
-	const collection = await clientDB.db("discord_bot").collection("global_info");
-	const cursor = await collection.find({ "name_id" : config["MONGO"]["NAME"] });
+	const collection = clientDB.db("discord_bot").collection("global_info");
+	const cursor = collection.find({ "name_id" : config["MONGO"]["NAME"] });
 	const toRet = (await cursor.toArray())[0];
 	await clientDB.close();
 	return toRet;
@@ -38,8 +38,9 @@ const getGlobalInfo = async () => {
 const setGlobalInfo = async (document) => {
 	const clientDB = new MongoClient(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 	await clientDB.connect();
-	const collection = await clientDB.db("discord_bot").collection("global_info");
+	const collection = clientDB.db("discord_bot").collection("global_info");
 	const cursor = await collection.updateOne({ "name_id" : config["MONGO"]["NAME"] }, { "$set": document });
+	await clientDB.close();
 	return cursor;
 }
 
