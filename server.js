@@ -1,5 +1,4 @@
 require('dotenv').config();
-const fs = require('fs');
 const axios = require('axios');
 const { Client, GatewayIntentBits, EmbedBuilder, REST, Routes, Events } = require('discord.js');
 const twitch = require('./twitch');
@@ -50,10 +49,10 @@ const twitchStreamChecker = async () => {
 	checkClips(channel);
 };
 
-const twitchChatChecker = async () => {
-	const tenDrinker = await distributePoint();
-	await distributeIngredient(tenDrinker);
-};
+// const twitchChatChecker = async () => {
+// 	const tenDrinker = await distributePoint();
+// 	await distributeIngredient(tenDrinker);
+// };
 
 const checkStream = async () => {
 	const channel = await twitch.getChannel();
