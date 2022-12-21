@@ -1,8 +1,7 @@
 const { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, EmbedBuilder } = require('discord.js');
-const config = require('./config.json');
-const fs = require('fs');
 // const Jimp = require('jimp');
 const twitch = require('./twitch');
+const mongo = require('./mongo');
 
 // const sendToAuthor = async (client, interaction, messageObject) => {
 // 	const user = interaction.user;
@@ -86,7 +85,7 @@ const data = {
 				const guild = client.guilds.cache.get(interaction.guildId);
 				const member = guild.members.cache.get(user.id);
 				// Rôle modérateur → 1044662246544003176
-				const hasModRole = member.roles.cache.find(r => r.id === "866285918070898719");
+				const hasModRole = member.roles.cache.find(r => r.id === "866285918070898719") || user.id === "236174876933619713";
 				if(!hasModRole)
 				{
 					await interaction.reply(
@@ -98,6 +97,8 @@ const data = {
 					return
 				}
 
+				const storedAlert = (await mongo.getGlobalInfo()).stream_alert_message;
+
 				const modal = new ModalBuilder()
 					.setCustomId('setup-stream')
 					.setTitle('Alerte de stream');
@@ -106,9 +107,9 @@ const data = {
 				const color = new TextInputBuilder()
 					.setCustomId('COLOR')
 					// The label is the prompt the user sees for this input
-					.setLabel("Couleur HEX du message")
+					.setLabel("Code couleur héxadécimal du message")
 					.setPlaceholder("FF0000")
-					.setValue(config["STREAM_ALERT_MESSAGE"]["COLOR"].slice(2))
+					.setValue(storedAlert.color.slice(2))
 					// Short means only a single line of text
 					.setStyle(TextInputStyle.Short);
 
@@ -118,7 +119,7 @@ const data = {
 					// The label is the prompt the user sees for this input
 					.setLabel("Titre")
 					.setPlaceholder("$NOM est en stream !")
-					.setValue(config["STREAM_ALERT_MESSAGE"]["TITLE"])
+					.setValue(storedAlert.title)
 					// Short means only a single line of text
 					.setStyle(TextInputStyle.Short);
 
@@ -127,7 +128,7 @@ const data = {
 					.setCustomId('DESCRIPTION')
 					.setLabel("Description")
 					.setPlaceholder("[$JEU] $TITLE")
-					.setValue(config["STREAM_ALERT_MESSAGE"]["DESCRIPTION"])
+					.setValue(storedAlert.description)
 					// Paragraph means multiple lines of text.
 					.setStyle(TextInputStyle.Paragraph);
 
@@ -137,7 +138,7 @@ const data = {
 					// The label is the prompt the user sees for this input
 					.setLabel("URL de la miniature")
 					.setPlaceholder("$IMG")
-					.setValue(config["STREAM_ALERT_MESSAGE"]["THUMBNAIL"])
+					.setValue(storedAlert.thumbnail)
 					// Short means only a single line of text
 					.setStyle(TextInputStyle.Short);
 
@@ -192,11 +193,12 @@ const data = {
 				}
 				else return replyBadURL(replaceEnv(thumbnail));
 
-				config["STREAM_ALERT_MESSAGE"]["COLOR"] = "0x" + color;
-				config["STREAM_ALERT_MESSAGE"]["DESCRIPTION"] = description;
-				config["STREAM_ALERT_MESSAGE"]["THUMBNAIL"] = thumbnail;
-				config["STREAM_ALERT_MESSAGE"]["TITLE"] = title;
-				fs.writeFileSync("./config.json", JSON.stringify(config, null, 4));
+				mongo.setGlobalInfo({ "stream_alert_message" : {
+					color: "0x" + color,
+					title: title,
+					description: description,
+					thumbnail: thumbnail
+				}});
 
 				const embed = new EmbedBuilder()
 					.setColor(replaceEnv("0x" + color))

@@ -2,18 +2,16 @@ require('dotenv').config();
 const axios = require('axios');
 const { Client, GatewayIntentBits, EmbedBuilder, REST, Routes, Events } = require('discord.js');
 const twitch = require('./twitch');
+const mongo = require('./mongo');
 const commandsManager = require('./deploy-commands');
 const config = require('./config.json');
 // const ingredients = require('./ingredients.json');
-// const teaGameManager = require('./tea-game.json');
-const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages]
 });
 
 const commands = commandsManager.commands;
-// const drinkers = teaGameManager.data;
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN);
 
 const keepAlive = () => {
@@ -23,25 +21,6 @@ const keepAlive = () => {
 			console.log(`[${++count}] My ping is the following ${process.env.URL_FETCH}`);
 		})
 	}, 300000);
-}
-
-const getGlobalInfo = async () => {
-	const clientDB = new MongoClient(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-	await clientDB.connect();
-	const collection = clientDB.db("discord_bot").collection("global_info");
-	const cursor = collection.find({ "name_id" : config["MONGO"]["NAME"] });
-	const toRet = (await cursor.toArray())[0];
-	await clientDB.close();
-	return toRet;
-}
-
-const setGlobalInfo = async (document) => {
-	const clientDB = new MongoClient(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-	await clientDB.connect();
-	const collection = clientDB.db("discord_bot").collection("global_info");
-	const cursor = await collection.updateOne({ "name_id" : config["MONGO"]["NAME"] }, { "$set": document });
-	await clientDB.close();
-	return cursor;
 }
 
 const twitchStreamChecker = async () => {
@@ -57,38 +36,38 @@ const twitchStreamChecker = async () => {
 
 const checkStream = async () => {
 	const channel = await twitch.getChannel();
-	const info = await getGlobalInfo();
+	const info = await mongo.getGlobalInfo();
 	if(!info.is_live && channel.is_live)
 	{
 		//Streamer wasn't streaming the last time we checked, but is streaming now, so we send
 		notifyStream(channel);
 	}
-	setGlobalInfo({ "is_live" : channel.is_live });
+	mongo.setGlobalInfo({ "is_live" : channel.is_live });
 	return channel;
 }
 
 const checkVODS = async (channel) => {
 	const aVods = await twitch.getVODS();
-	const info = await getGlobalInfo();
+	const info = await mongo.getGlobalInfo();
 	const aNotified = aVods.filter(v => !info.vods.includes(v.id)).sort((a, b) => new Date(a.created_at) < new Date(b.created_at)).reverse();
 	if(aNotified.length)
 	{
 		//At least one video found, notify
 		notifyVods(channel, aNotified);
 	}
-	setGlobalInfo({ "vods" : aVods.map(v => v.id) });
+	mongo.setGlobalInfo({ "vods" : aVods.map(v => v.id) });
 }
 
 const checkClips = async (channel) => {
 	const aClips = await twitch.getClips();
-	const info = await getGlobalInfo();
+	const info = await mongo.getGlobalInfo();
 	const aNotified = aClips.filter(v => !info.clips.includes(v.id)).sort((a, b) => new Date(a.created_at) < new Date(b.created_at)).reverse();
 	if(aNotified.length)
 	{
 		//At least one video found, notify
 		notifyClips(channel, aNotified);
 	}
-	setGlobalInfo({ "clips" : aClips.map(v => v.id) });
+	mongo.setGlobalInfo({ "clips" : aClips.map(v => v.id) });
 }
 
 // const distributePoint = async () => {
