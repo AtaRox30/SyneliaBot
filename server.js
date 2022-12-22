@@ -2,6 +2,7 @@ require('dotenv').config();
 const axios = require('axios');
 const { Client, GatewayIntentBits, EmbedBuilder, REST, Routes, Events } = require('discord.js');
 const twitch = require('./twitch');
+const youtube = require('./youtube');
 const mongo = require('./mongo');
 const commandsManager = require('./deploy-commands');
 const config = require('./config.json');
@@ -25,7 +26,7 @@ const keepAlive = () => {
 
 const twitchStreamChecker = async () => {
 	const channel = await checkStream();
-	// checkVODS(channel);
+	checkVODS(channel);
 	checkClips(channel);
 };
 
@@ -47,13 +48,13 @@ const checkStream = async () => {
 }
 
 const checkVODS = async (channel) => {
-	const aVods = await twitch.getVODS();
+	const aVods = await youtube.getVODS();
 	const info = await mongo.getGlobalInfo();
-	const aNotified = aVods.filter(v => !info.vods.includes(v.id)).sort((a, b) => new Date(a.created_at) < new Date(b.created_at)).reverse();
+	const aNotified = aVods.filter(v => !info.vods.includes(v.id)).sort((a, b) => new Date(a.publishedAt) < new Date(b.publishedAt)).reverse();
 	if(aNotified.length)
 	{
 		//At least one video found, notify
-		notifyVods(channel, aNotified);
+		notifyVods(channel, aNotified.map(v => v.snippet));
 	}
 	mongo.setGlobalInfo(
 		{ "$push" : { "vods" : { "$each" : aNotified.map(v => v.id) } } },
@@ -152,34 +153,50 @@ const notifyVods = async (channel, aVods) => {
 			}
 
 			vod {
-				id: string,
-				user_name: string,
+				publishedAt: string,
 				title: string,
-				published_at: string,
-				url: string,
-				thumbnail_url: string,
-				description: string
+				description: string,
+				thumbnails: Thumbnail
 			}
 
-			game {
-				id: string,
-				name: string,
-				box_art_url: string,
-				igdb_id: string
+			Thumbnail {
+				"default": {
+					"url": string,
+					"width": number,
+					"height": number
+				},
+				"medium": {
+					"url": string,
+					"width": number,
+					"height": number
+				},
+				"high": {
+					"url": string,
+					"width": number,
+					"height": number
+				},
+				"standard": {
+					"url": string,
+					"width": number,
+					"height": number
+				},
+				"maxres": {
+					"url": string,
+					"width": number,
+					"height": number
+				}
 			}
 		*/
-		const game = await twitch.getGame(channel.game_id);
-		const thumbGame = game.box_art_url.replace("{width}", 285).replace("{height}", 380);
-		const thumbVideo = vod.thumbnail_url.replace("%{width}", 800).replace("%{height}", 450);
+		const thumbVideo = vod.thumbnails.standard.url;
 		const guild = client.guilds.cache.get(config["DISCORD"]["GUILD_ID"]);
 		const channelDisc = guild.channels.cache.get(config["DISCORD"]["CHANNELS"]["VOD"]);
 		const exampleEmbed = new EmbedBuilder()
 			.setColor(0xB07705)
 			.setTitle(vod.title)
-			.setURL(vod.url)
-			.setAuthor({ name: vod.user_name, iconURL: channel.thumbnail_url, url: 'https://www.twitch.tv/syneliasan' })
+			.setURL(config["URL"]["YOUTUBE"]["GET_VIDEO_PREFIX"] + vod.id)
+			.setAuthor({ name: channel.display_name, iconURL: channel.thumbnail_url, url: 'https://www.twitch.tv/syneliasan' })
 			.setDescription(vod.description.length ? vod.description : "Aucune description")
-			.setThumbnail(thumbGame)
+			.setThumbnail(channel.thumbnail_url)
 			.setImage(thumbVideo)
 
 		await channelDisc.send({

@@ -21,7 +21,9 @@
             "GET_CHATTERS": "https://api.twitch.tv/helix/chat/chatters"
         },
         "YOUTUBE": {
-            "GET_TOKEN_YTB": "https://www.googleapis.com/oauth2/v4/token"
+            "GET_VIDEO": "https://www.googleapis.com/youtube/v3/videos",
+            "GET_VIDEO_PREFIX": "https://www.youtube.com/watch?v=",
+            "GET_SEARCH": "https://www.googleapis.com/youtube/v3/search"
         }
     },
     "DISCORD": {
@@ -31,11 +33,5 @@
             "VOD": "1054829403907051530",
             "ONLINE": "1054829403907051530"
         }
-    },
-    "STREAM_ALERT_MESSAGE": {
-        "COLOR": "0xFF0000",
-        "TITLE": "Retrouve-moi sur $JEU !",
-        "DESCRIPTION": "$TITRE",
-        "THUMBNAIL": "$IMG"
     }
 }

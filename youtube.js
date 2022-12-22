@@ -1,39 +1,63 @@
 const config = require("./config.json");
 const request = require("request");
 
-const getToken = (callback) => {
+const getVODPage = async (pagination) => {
 	const options = {
-		url: config.URL["YOUTUBE"]["GET_TOKEN_YTB"],
-		json: true,
-		body: {
-			client_id: process.env.YOUTUBE_CLIENT_ID,
-			client_secret: process.env.YOUTUBE_CLIENT_SECRET,
-			refresh_token: config["YOUTUBE"]["REFRESH"],
-			grant_type: 'refresh_token'
-		}
+		url: config["URL"]["YOUTUBE"]["GET_SEARCH"] + 
+			"?key=" + process.env.YOUTUBE_API_KEY + 
+			"&type=video&channelId=" + config["VIDEO_CREATOR"]["ID"] + 
+			(pagination ? "&nextPageToken=" + pagination : ""),
+		json: true
 	}
 
-	request.post(options, (err, res, body) => {
-		if(err) return console.error(err);
-		callback(body.access_token);
-	})
+	return new Promise(function(resolve, reject) {
+		request.get(options, (err, res, body) => {
+			if (!err && res.statusCode === 200) {
+				resolve(body);
+			} else {
+				reject(err);
+			}
+		})
+	});
+}
+
+const getVideoInfo = async (id) => {
+	const options = {
+		url: config["URL"]["YOUTUBE"]["GET_VIDEO"] + 
+			"?key=" + process.env.YOUTUBE_API_KEY + 
+			"&part=snippet&id=" + id,
+		json: true
+	}
+
+	return new Promise(function(resolve, reject) {
+		request.get(options, (err, res, body) => {
+			if (!err && res.statusCode === 200) {
+				resolve(body);
+			} else {
+				reject(err);
+			}
+		})
+	});
 }
 
 
 const ytb = {
 	getVODS: async () => {
-		return new Promise((resolve, reject) => {
-			getToken(async (at) => {
-				let pagination = undefined;
-				const res = [];
-				do {
-					const r = await getVODPage(at, pagination);
-					res.push(...r.data);
-					pagination = r.pagination.cursor;
-				}
-				while(pagination)
-				resolve(res);
-			});
+		return new Promise(async (resolve, reject) => {
+			let pagination = undefined;
+			const resId = [];
+			const res = [];
+			do {
+				const r = await getVODPage(pagination);
+				resId.push(...r.items.map(v => v.id.videoId));
+				pagination = r.nextPageToken;
+			}
+			while(pagination)
+			for(let videoId of resId) {
+				const info = await getVideoInfo(videoId);
+				res.push(info.items[0])
+			}
+			resolve(res);
 		});
 	}
 }
