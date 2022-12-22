@@ -193,12 +193,16 @@ const data = {
 				}
 				else return replyBadURL(replaceEnv(thumbnail));
 
-				mongo.setGlobalInfo({ "stream_alert_message" : {
-					color: "0x" + color,
-					title: title,
-					description: description,
-					thumbnail: thumbnail
-				}});
+				mongo.setGlobalInfo({ "$set" : 
+					{ 
+						"stream_alert_message" : {
+							color: "0x" + color,
+							title: title,
+							description: description,
+							thumbnail: thumbnail
+						}
+					}
+				});
 
 				const embed = new EmbedBuilder()
 					.setColor(replaceEnv("0x" + color))

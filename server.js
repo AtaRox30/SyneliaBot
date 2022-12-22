@@ -42,7 +42,7 @@ const checkStream = async () => {
 		//Streamer wasn't streaming the last time we checked, but is streaming now, so we send
 		notifyStream(channel);
 	}
-	mongo.setGlobalInfo({ "is_live" : channel.is_live });
+	mongo.setGlobalInfo({ "$set" : { "is_live" : channel.is_live } });
 	return channel;
 }
 
@@ -55,7 +55,10 @@ const checkVODS = async (channel) => {
 		//At least one video found, notify
 		notifyVods(channel, aNotified);
 	}
-	mongo.setGlobalInfo({ "vods" : aVods.map(v => v.id) });
+	mongo.setGlobalInfo(
+		{ "$push" : { "vods" : { "$each" : aVods.map(v => v.id) } } },
+		{ "upsert" : true }
+	);
 }
 
 const checkClips = async (channel) => {
@@ -67,7 +70,10 @@ const checkClips = async (channel) => {
 		//At least one video found, notify
 		notifyClips(channel, aNotified);
 	}
-	mongo.setGlobalInfo({ "clips" : aClips.map(v => v.id) });
+	mongo.setGlobalInfo(
+		{ "$push" : { "clips" : { "$each" : aClips.map(v => v.id) } } },
+		{ "upsert" : true }
+	);
 }
 
 // const distributePoint = async () => {

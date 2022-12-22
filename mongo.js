@@ -12,11 +12,11 @@ const mongo = {
 		return toRet;
 	},
 
-	setGlobalInfo: async (document) => {
+	setGlobalInfo: async (update, options) => {
 		const clientDB = new MongoClient(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 		await clientDB.connect();
 		const collection = clientDB.db("discord_bot").collection("global_info");
-		const cursor = await collection.updateOne({ "name_id" : config["MONGO"]["NAME"] }, { "$set": document });
+		const cursor = await collection.updateOne({ "name_id" : config["MONGO"]["NAME"] }, update, options);
 		await clientDB.close();
 		return cursor;
 	}
