@@ -30,7 +30,7 @@ const twitchChecker = async () => {
 };
 
 const youtubeChecker = async () => {
-	const channel = await checkStream();
+	const channel = await twitch.getChannel();
 	checkVODS(channel);
 };
 
