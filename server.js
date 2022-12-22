@@ -54,7 +54,7 @@ const checkVODS = async (channel) => {
 	if(aNotified.length)
 	{
 		//At least one video found, notify
-		notifyVods(channel, aNotified.map(v => v.snippet));
+		notifyVods(channel, aNotified);
 	}
 	mongo.setGlobalInfo(
 		{ "$push" : { "vods" : { "$each" : aNotified.map(v => v.id) } } },
@@ -187,15 +187,15 @@ const notifyVods = async (channel, aVods) => {
 				}
 			}
 		*/
-		const thumbVideo = vod.thumbnails.standard.url;
+		const thumbVideo = vod.snippet.thumbnails.standard.url;
 		const guild = client.guilds.cache.get(config["DISCORD"]["GUILD_ID"]);
 		const channelDisc = guild.channels.cache.get(config["DISCORD"]["CHANNELS"]["VOD"]);
 		const exampleEmbed = new EmbedBuilder()
 			.setColor(0xB07705)
-			.setTitle(vod.title)
+			.setTitle(vod.snippet.title)
 			.setURL(config["URL"]["YOUTUBE"]["GET_VIDEO_PREFIX"] + vod.id)
 			.setAuthor({ name: channel.display_name, iconURL: channel.thumbnail_url, url: 'https://www.twitch.tv/syneliasan' })
-			.setDescription(vod.description.length ? vod.description : "Aucune description")
+			.setDescription(vod.snippet.description.length ? vod.snippet.description : "Aucune description")
 			.setThumbnail(channel.thumbnail_url)
 			.setImage(thumbVideo)
 
