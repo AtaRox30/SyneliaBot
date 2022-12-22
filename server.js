@@ -56,7 +56,7 @@ const checkVODS = async (channel) => {
 		notifyVods(channel, aNotified);
 	}
 	mongo.setGlobalInfo(
-		{ "$push" : { "vods" : { "$each" : aVods.map(v => v.id) } } },
+		{ "$push" : { "vods" : { "$each" : aNotified.map(v => v.id) } } },
 		{ "upsert" : true }
 	);
 }
@@ -71,7 +71,7 @@ const checkClips = async (channel) => {
 		notifyClips(channel, aNotified);
 	}
 	mongo.setGlobalInfo(
-		{ "$push" : { "clips" : { "$each" : aClips.map(v => v.id) } } },
+		{ "$push" : { "clips" : { "$each" : aNotified.map(v => v.id) } } },
 		{ "upsert" : true }
 	);
 }
