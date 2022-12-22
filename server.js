@@ -24,10 +24,14 @@ const keepAlive = () => {
 	}, 300000);
 }
 
-const twitchStreamChecker = async () => {
+const twitchChecker = async () => {
+	const channel = await checkStream();
+	checkClips(channel);
+};
+
+const youtubeChecker = async () => {
 	const channel = await checkStream();
 	checkVODS(channel);
-	checkClips(channel);
 };
 
 // const twitchChatChecker = async () => {
@@ -315,7 +319,8 @@ const modalSubmitHandler = async (interaction) => {
 
 client.on("ready", async () => {
     console.log("Discord bot ready");
-	setInterval(twitchStreamChecker, 10000);
+	setInterval(twitchChecker, 10000);
+	setInterval(youtubeChecker, 290000);
 	// setInterval(twitchChatChecker, 60000);
 });
 
