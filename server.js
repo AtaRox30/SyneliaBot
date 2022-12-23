@@ -124,6 +124,9 @@ const notifyStream = async (channel) => {
 			title: string
 		}
 	*/
+  
+  const storedAlert = (await mongo.getGlobalInfo()).stream_alert_message;
+  
 	const replaceEnv = (string) => string.replace("$TITRE", channel.title)
 		.replace("$IMG", channel.thumbnail_url)
 		.replace("$NOM", channel.display_name)
@@ -132,12 +135,12 @@ const notifyStream = async (channel) => {
 	const guild = client.guilds.cache.get(config["DISCORD"]["GUILD_ID"]);
 	const channelDisc = guild.channels.cache.get(config["DISCORD"]["CHANNELS"]["ONLINE"]);
 	const embed = new EmbedBuilder()
-		.setColor(replaceEnv(config["STREAM_ALERT_MESSAGE"]["COLOR"]))
-		.setTitle(replaceEnv(config["STREAM_ALERT_MESSAGE"]["TITLE"]))
+		.setColor(replaceEnv(storedAlert.color))
+		.setTitle(replaceEnv(storedAlert.title))
 		.setURL('https://www.twitch.tv/syneliasan')
 		.setAuthor({ name: channel.display_name, iconURL: channel.thumbnail_url, url: 'https://www.twitch.tv/syneliasan' })
-		.setDescription(replaceEnv(config["STREAM_ALERT_MESSAGE"]["DESCRIPTION"]))
-		.setThumbnail(replaceEnv(config["STREAM_ALERT_MESSAGE"]["THUMBNAIL"]))
+		.setDescription(replaceEnv(storedAlert.description))
+		.setThumbnail(replaceEnv(storedAlert.thumbnail))
 
 	await channelDisc.send({
 		content: '@everyone',
