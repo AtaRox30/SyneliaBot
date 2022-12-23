@@ -100,9 +100,9 @@ const data = {
 					{
 						const embedConfirm = new EmbedBuilder()
 							.setColor(0x43A047)
-							.setAuthor({ name: userTwitch.display_name, iconURL: userTwitch.profile_image_url, url: `https://www.twitch.tv/${accountName}` })
+							.setAuthor({ name: userTwitch.display_name, iconURL: userTwitch.profile_image_url, url: `https://www.twitch.tv/${extra.channel}` })
 							.setTitle("Confirmation du compte Twitch")
-							.setURL(`https://www.twitch.tv/${accountName}`)
+							.setURL(`https://www.twitch.tv/${extra.channel}`)
 							.setDescription(`Le compte ${accountName} a été lié à votre compte Discord`)
 							.setThumbnail("https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Eo_circle_green_checkmark.svg/1200px-Eo_circle_green_checkmark.svg.png");
 
