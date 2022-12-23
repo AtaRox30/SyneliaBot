@@ -52,18 +52,22 @@ const checkStream = async () => {
 }
 
 const checkVODS = async (channel) => {
-	const aVods = await youtube.getVODS();
-	const info = await mongo.getGlobalInfo();
-	const aNotified = aVods.filter(v => !info.vods.includes(v.id)).sort((a, b) => new Date(a.publishedAt) < new Date(b.publishedAt)).reverse();
-	if(aNotified.length)
-	{
-		//At least one video found, notify
-		notifyVods(channel, aNotified);
+	try {
+		const aVods = await youtube.getVODS();
+		const info = await mongo.getGlobalInfo();
+		const aNotified = aVods.filter(v => !info.vods.includes(v.id)).sort((a, b) => new Date(a.publishedAt) < new Date(b.publishedAt)).reverse();
+		if(aNotified.length)
+		{
+			//At least one video found, notify
+			notifyVods(channel, aNotified);
+		}
+		mongo.setGlobalInfo(
+			{ "$push" : { "vods" : { "$each" : aNotified.map(v => v.id) } } },
+			{ "upsert" : true }
+		);
+	} catch(e) {
+		console.log(e);
 	}
-	mongo.setGlobalInfo(
-		{ "$push" : { "vods" : { "$each" : aNotified.map(v => v.id) } } },
-		{ "upsert" : true }
-	);
 }
 
 const checkClips = async (channel) => {

@@ -44,22 +44,24 @@ const getVideoInfo = async (id) => {
 const ytb = {
 	getVODS: async () => {
 		return new Promise(async (resolve, reject) => {
-			let pagination = undefined;
-			const resId = [];
-			const res = [];
-			do {
-				getVODPage(pagination).then((r) => {
+			try {
+				let pagination = undefined;
+				const resId = [];
+				const res = [];
+				do {
+					const r = await getVODPage(pagination);
 					resId.push(...r.items.map(v => v.id.videoId));
 					pagination = r.nextPageToken;
-				}).catch((err) => reject(err));
-			}
-			while(pagination)
-			for(let videoId of resId) {
-				getVideoInfo(videoId).then((info) => {
+				}
+				while(pagination)
+				for(let videoId of resId) {
+					const info = await getVideoInfo(videoId);
 					res.push(info.items[0]);
-				}).catch((err) => reject(err));
+				}
+				resolve(res);
+			} catch(e) {
+				reject(e);
 			}
-			resolve(res);
 		});
 	}
 }
