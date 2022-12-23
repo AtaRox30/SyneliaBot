@@ -72,9 +72,9 @@ const data = {
 				const code = S4().toUpperCase();
 				const embedVerif = new EmbedBuilder()
 					.setColor(0x3B5998)
-					.setAuthor({ name: userTwitch.display_name, iconURL: userTwitch.profile_image_url, url: `https://www.twitch.tv/${accountName}` })
+					.setAuthor({ name: userTwitch.display_name, iconURL: userTwitch.profile_image_url, url: `https://www.twitch.tv/${userTwitch.login}` })
 					.setTitle("Requête de liaison du compte Twitch")
-					.setURL(`https://www.twitch.tv/${accountName}`)
+					.setURL(`https://www.twitch.tv/${userTwitch.login}`)
 					.setDescription("Veuillez rentrer le code suivant dans le chat Twitch de votre compte : " + code)
 					.setThumbnail("https://cdn4.iconfinder.com/data/icons/colorful-design-basic-icons-1/550/question_doubt_darkblue-512.png");
 
@@ -87,7 +87,7 @@ const data = {
 					comfy.close();
 					const embedMiss = new EmbedBuilder()
 						.setColor(0xDD3333)
-						.setAuthor({ name: userTwitch.display_name, iconURL: userTwitch.profile_image_url, url: `https://www.twitch.tv/${accountName}` })
+						.setAuthor({ name: userTwitch.display_name, iconURL: userTwitch.profile_image_url, url: `https://www.twitch.tv/${userTwitch.login}` })
 						.setTitle("Délai d'attente dépassé")
 						.setDescription("Vous n'avez pas rentrer le code ou nous n'avons pas reussi à le lire, si tel est le cas, en avertir le staff")
 						.setThumbnail("https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Cross_red_circle.svg/2048px-Cross_red_circle.svg.png");
