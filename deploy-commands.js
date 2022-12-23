@@ -2,12 +2,28 @@ const { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, Act
 // const Jimp = require('jimp');
 const twitch = require('./twitch');
 const mongo = require('./mongo');
+const comfy = require('./comfy');
 
-// const sendToAuthor = async (client, interaction, messageObject) => {
-// 	const user = interaction.user;
-// 	const guild = client.guilds.cache.get(interaction.guildId);
-// 	await guild.members.cache.get(user.id).send(messageObject)
-// }
+const sendToAuthor = async (client, interaction, messageObject) => {
+	const user = interaction.user;
+	const guild = client.guilds.cache.get(interaction.guildId);
+	await guild.members.cache.get(user.id).send(messageObject);
+}
+
+const insertOrUpdateDrinker = async (discordId, name) => {
+	const drinker = await mongo.getDrinkerProfile({ "discordId" : discordId });
+	if(drinker)
+	{
+		await mongo.updateDrinkerProfile(
+			{ "discordId" : discordId },
+			{ "twitchId" : name }
+		);
+	}
+	else
+	{
+		await mongo.insertDrinkerProfile(discordId, name);
+	}
+}
 
 // function fill(color) {
 //     return function (x, y, offset) {
@@ -40,16 +56,69 @@ const mongo = require('./mongo');
 // 	});
 // }
 
+const S4 = () => {return (((1+Math.random())*0x10000)|0).toString(16).substring(1)};
+
 const data = {
 	"commands": [
-		// // Link Twitch account
-		// {
-		// 	data: new SlashCommandBuilder().setName('link').setDescription('Lie votre compte Twitch à Discord'),
-		// 	execute: async (client, interaction) => {
-		// 		// sendToAuthor(client, interaction, "test");
-		// 		await interaction.reply({ content: 'La commande est en travaux !', ephemeral: true });
-		// 	},
-		// },
+		// Link Twitch account
+		{
+			data: new SlashCommandBuilder().setName('link').setDescription('Lie votre compte Twitch à Discord')
+				.addStringOption(option => option.setName('twitch-account').setDescription('Le compte Twitch').setRequired(true)),
+			execute: async (client, interaction) => {
+				const accountName = interaction.options.get('twitch-account').value;
+				const userTwitch = await twitch.getUserByName(accountName);
+				const code = S4().toUpperCase();
+				const embedVerif = new EmbedBuilder()
+					.setColor(0x3B5998)
+					.setAuthor({ name: userTwitch.display_name, iconURL: userTwitch.profile_image_url, url: `https://www.twitch.tv/${accountName}` })
+					.setTitle("Requête de liaison du compte Twitch")
+					.setURL(`https://www.twitch.tv/${accountName}`)
+					.setDescription("Veuillez rentrer le code suivant dans le chat Twitch de votre compte : " + code)
+					.setThumbnail("https://cdn4.iconfinder.com/data/icons/colorful-design-basic-icons-1/550/question_doubt_darkblue-512.png");
+
+				sendToAuthor(client, interaction, {
+					content: "",
+					embeds: [embedVerif]
+				});
+
+				const chatSession = setTimeout(() => {
+					comfy.close();
+					const embedMiss = new EmbedBuilder()
+						.setColor(0xDD3333)
+						.setAuthor({ name: userTwitch.display_name, iconURL: userTwitch.profile_image_url, url: `https://www.twitch.tv/${accountName}` })
+						.setTitle("Délai d'attente dépassé")
+						.setDescription("Vous n'avez pas rentrer le code ou nous n'avons pas reussi à le lire, si tel est le cas, en avertir le staff")
+						.setThumbnail("https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Cross_red_circle.svg/2048px-Cross_red_circle.svg.png");
+					sendToAuthor(client, interaction, {
+						content: "",
+						embeds: [embedMiss]
+					});
+				}, 120000);
+
+				comfy.listen(accountName, async (user, message, flags, self, extra) => {
+					if(message === code && user === accountName)
+					{
+						const embedConfirm = new EmbedBuilder()
+							.setColor(0x43A047)
+							.setAuthor({ name: userTwitch.display_name, iconURL: userTwitch.profile_image_url, url: `https://www.twitch.tv/${accountName}` })
+							.setTitle("Confirmation du compte Twitch")
+							.setURL(`https://www.twitch.tv/${accountName}`)
+							.setDescription(`Le compte ${accountName} a été lié à votre compte Discord`)
+							.setThumbnail("https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Eo_circle_green_checkmark.svg/1200px-Eo_circle_green_checkmark.svg.png");
+
+						sendToAuthor(client, interaction, {
+							content: "",
+							embeds: [embedConfirm]
+						});
+						clearTimeout(chatSession);
+						comfy.close();
+
+						insertOrUpdateDrinker(interaction.user.id, extra.channel);
+					}
+				});
+				await interaction.reply({ content: 'Un message vous a été envoyé', ephemeral: true });
+			},
+		},
 		// // View recipes
 		// {
 		// 	data: new SlashCommandBuilder().setName('recipes').setDescription('Consultation des recettes disponible'),

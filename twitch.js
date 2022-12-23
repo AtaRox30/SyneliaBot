@@ -102,9 +102,30 @@ const getGames = (at, id) => {
 	});
 }
 
-const getUsers = (at, id) => {
+const getUsersById = (at, id) => {
 	const options = {
 		url: config.URL["TWITCH"]["GET_USER_ID"] + '?id=' + id,
+		json: true,
+		headers: {
+			'Client-Id': process.env.TWITCH_CLIENT_ID,
+			'Authorization': 'Bearer ' + at
+		}
+	}
+
+	return new Promise(function(resolve, reject) {
+		request.get(options, (err, res, body) => {
+			if (!err && res.statusCode === 200) {
+				resolve(body);
+			} else {
+				reject(err);
+			}
+		})
+	});
+}
+
+const getUsersByName = (at, id) => {
+	const options = {
+		url: config.URL["TWITCH"]["GET_USER_ID"] + '?login=' + id,
 		json: true,
 		headers: {
 			'Client-Id': process.env.TWITCH_CLIENT_ID,
@@ -192,10 +213,19 @@ const twitch = {
 		});
 	},
 
-	getUser: async (id) => {
+	getUserById: async (id) => {
 		return new Promise((resolve, reject) => {
 			getToken(async (at) => {
-				const users = await getUsers(at, id);
+				const users = await getUsersById(at, id);
+				resolve(users.data[0]);
+			});
+		});
+	},
+
+	getUserByName: async (id) => {
+		return new Promise((resolve, reject) => {
+			getToken(async (at) => {
+				const users = await getUsersByName(at, id);
 				resolve(users.data[0]);
 			});
 		});

@@ -246,7 +246,7 @@ const notifyClips = (channel, aClips) => {
 		*/
 
 		const game = await twitch.getGame(clip.game_id);
-		const creator = await twitch.getUser(clip.creator_id);
+		const creator = await twitch.getUserById(clip.creator_id);
 		const thumbGame = game.box_art_url.replace("{width}", 285).replace("{height}", 380);
 		const thumbVideo = clip.thumbnail_url.replace("%{width}", 800).replace("%{height}", 450);
 		const guild = client.guilds.cache.get(config["DISCORD"]["GUILD_ID"]);
@@ -319,7 +319,7 @@ const modalSubmitHandler = async (interaction) => {
 client.on("ready", async () => {
     console.log("Discord bot ready");
 	setInterval(twitchChecker, 10000);
-	setInterval(youtubeChecker, 290000);
+	setInterval(youtubeChecker, 300000);
 	// setInterval(twitchChatChecker, 60000);
 });
 
