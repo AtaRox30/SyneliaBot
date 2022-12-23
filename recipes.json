@@ -1,0 +1,123 @@
+{
+	"JARDIN_BLEU": {
+		"name": "Jardin bleu",
+		"ingredients": {
+			"RHUBARBE": 2,
+			"FRAISE": 1,
+			"GROSEILLE": 1
+		}
+	},
+	"DOUCEUR_ENNEIGE": {
+		"name": "Douceur enneigée",
+		"ingredients": {
+			"CANNELLE": 2,
+			"AMANDE": 1,
+			"POMME": 1
+		}
+	},
+	"FORMULE_CELESTE": {
+		"name": "Formule céleste",
+		"ingredients": {
+			"CARAMEL": 1,
+			"FLEUR_ORANGER": 1,
+			"VIOLETTE": 1,
+			"VANILLE": 1
+		}
+	},
+	"JARDIN_POETES": {
+		"name": "Jardin des poètes",
+		"ingredients": {
+			"FRAISE": 1,
+			"VANILLE": 1,
+			"CERISE": 1,
+			"CARAMEL": 1
+		}
+	},
+	"AURA_BIEN_ETRE": {
+		"name": "Aura de bien-être",
+		"ingredients": {
+			"ORANGE": 2,
+			"CARAMEL": 1,
+			"POMME": 1
+		}
+	},
+	"COQUELICOT_GOURMAND": {
+		"name": "Coquelicot gourmand",
+		"ingredients": {
+			"FRAMBOISE": 1,
+			"CERISE": 1,
+			"VIOLETTE": 1,
+			"VANILLE": 1
+		}
+	},
+	"FRUITS_ROUGES": {
+		"name": "4 fruits rouges",
+		"ingredients": {
+			"CERISE": 1,
+			"FRAISE": 1,
+			"FRAMBOISE": 1,
+			"GROSEILLE": 1
+		}
+	},
+	"MELANGE_MYSTERIEUX": {
+		"name": "Mélange mysterieux",
+		"ingredients": {
+			"ORANGE": 1,
+			"PECHE": 1,
+			"CERISE": 1,
+			"FRAISE": 1
+		}
+	},
+	"MELANGE_VENITIEN": {
+		"name": "Mélange venitien",
+		"ingredients": {
+			"VANILLE": 1,
+			"FRAISE": 1,
+			"RHUBARBE": 1,
+			"FRAMBOISE": 1
+		}
+	},
+	"MELANGE_FRUITE": {
+		"name": "Mélange fruité",
+		"ingredients": {
+			"POMME": 1,
+			"CANNELLE": 1,
+			"VANILLE": 1,
+			"ORANGE": 1
+		}
+	},
+	"PIKEPIK": {
+		"name": "Piképik",
+		"ingredients": {
+			"ORANGE": 1,
+			"FLEUR_ORANGER": 1,
+			"CITRON": 1,
+			"AMANDE": 1
+		}
+	},
+	"ENSOLEILLE": {
+		"name": "Ensoleillé",
+		"ingredients": {
+			"PECHE": 1,
+			"FRAMBOISE": 1,
+			"GROSEILLE": 1,
+			"VANILLE": 1
+		}
+	},
+	"ANASTASIA": {
+		"name": "Anastasia",
+		"ingredients": {
+			"BERGAMOTE": 2,
+			"CITRON": 1,
+			"FLEUR_ORANGER": 1
+		}
+	},
+	"COLONEL": {
+		"name": "Colonel",
+		"ingredients": {
+			"CITRON": 2,
+			"BERGAMOTE": 1,
+			"GROSEILLE": 1
+		}
+	}
+}

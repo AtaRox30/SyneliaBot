@@ -1,0 +1,66 @@
+{
+	"FRAISE": {
+		"name": "Fraise",
+		"weight": 5
+	},
+	"CARAMEL": {
+		"name": "Caramel",
+		"weight": 5
+	},
+	"POMME": {
+		"name": "Pomme",
+		"weight": 5
+	},
+	"CERISE": {
+		"name": "Cerise",
+		"weight": 5
+	},
+	"FRAMBOISE": {
+		"name": "Framboise",
+		"weight": 5
+	},
+	"CITRON": {
+		"name": "Citron",
+		"weight": 5
+	},
+	"ORANGE": {
+		"name": "Orange",
+		"weight": 5
+	},
+	"GROSEILLE": {
+		"name": "Groseille",
+		"weight": 4
+	},
+	"AMANDE": {
+		"name": "Amande",
+		"weight": 4
+	},
+	"PECHE": {
+		"name": "Pêche",
+		"weight": 4
+	},
+	"CANNELLE": {
+		"name": "Cannelle",
+		"weight": 3
+	},
+	"VANILLE": {
+		"name": "Vanille",
+		"weight": 3
+	},
+	"FLEUR_ORANGER": {
+		"name": "Fleur d'oranger",
+		"weight": 2
+	},
+	"VIOLETTE": {
+		"name": "Violette",
+		"weight": 1
+	},
+	"BERGAMOTE": {
+		"name": "Bergamote",
+		"weight": 1
+	},
+	"RHUBARBE": {
+		"name": "Rhubarbe",
+		"weight": 1
+	}
+}
