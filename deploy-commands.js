@@ -121,13 +121,6 @@ const data = {
 				await interaction.reply({ content: 'Un message vous a été envoyé', ephemeral: true });
 			},
 		},
-		// // View recipes
-		// {
-		// 	data: new SlashCommandBuilder().setName('recipes').setDescription('Consultation des recettes disponible'),
-		// 	execute: async (client, interaction) => {
-		// 		await interaction.reply({ content: 'Vos ingredients vous ont été envoyés en privé', ephemeral: true });
-		// 	},
-		// },
 		// // View ingredients in stocks
 		// {
 		// 	data: new SlashCommandBuilder().setName('ingredients').setDescription('Consultation des ingredients en votre possession'),
@@ -138,6 +131,13 @@ const data = {
 		// 			files: ["./classement.png"]
 		// 		});
 		// 		fs.unlink("./classement.png", function() {});
+		// 		await interaction.reply({ content: 'Vos ingredients vous ont été envoyés en privé', ephemeral: true });
+		// 	},
+		// },
+		// // View recipes
+		// {
+		// 	data: new SlashCommandBuilder().setName('recipes').setDescription('Consultation des recettes disponible'),
+		// 	execute: async (client, interaction) => {
 		// 		await interaction.reply({ content: 'Vos ingredients vous ont été envoyés en privé', ephemeral: true });
 		// 	},
 		// },

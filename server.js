@@ -329,7 +329,7 @@ client.on("ready", async () => {
     console.log("Discord bot ready");
 	setInterval(twitchChecker, 10000);
 	setInterval(youtubeChecker, 300000);
-	setInterval(twitchChatChecker, 60000);
+	// setInterval(twitchChatChecker, 60000);
 });
 
 client.on(Events.InteractionCreate, async interaction => {
