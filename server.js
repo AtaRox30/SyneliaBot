@@ -69,7 +69,8 @@ const checkVODS = async (channel) => {
 const checkClips = async (channel) => {
 	const aClips = await twitch.getClips();
 	const info = await mongo.getGlobalInfo();
-	const aNotified = aClips.filter(v => !info.clips.includes(v.id)).sort((a, b) => new Date(a.created_at) < new Date(b.created_at)).reverse();
+	const aNotified = aClips.filter(v => !info.clips.includes(v.id))
+		.filter(v => v.title !== channel.title).sort((a, b) => new Date(a.created_at) < new Date(b.created_at)).reverse();
 	if(aNotified.length)
 	{
 		//At least one video found, notify
