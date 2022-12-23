@@ -15,15 +15,6 @@ const client = new Client({
 const commands = commandsManager.commands;
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN);
 
-const keepAlive = () => {
-	let count = 0;
-	setInterval(() => {
-		axios.get(process.env.URL_FETCH).then(() => {
-			console.log(`[${++count}] My ping is the following ${process.env.URL_FETCH}`);
-		})
-	}, 300000);
-}
-
 const twitchChecker = async () => {
 	const channel = await checkStream();
 	checkClips(channel);
@@ -339,5 +330,4 @@ client.on(Events.InteractionCreate, async interaction => {
 
 client.login(process.env.DISCORD_BOT_TOKEN);
 
-keepAlive();
 registerCommands();
