@@ -49,14 +49,22 @@ const ytb = {
 				const resId = [];
 				const res = [];
 				do {
-					const r = await getVODPage(pagination);
-					resId.push(...r.items.map(v => v.id.videoId));
-					pagination = r.nextPageToken;
+					try {
+						const r = await getVODPage(pagination);
+						resId.push(...r.items.map(v => v.id.videoId));
+						pagination = r.nextPageToken;
+					} catch(e) {
+						reject(e);
+					}
 				}
 				while(pagination)
 				for(let videoId of resId) {
-					const info = await getVideoInfo(videoId);
-					res.push(info.items[0]);
+					try {
+						const info = await getVideoInfo(videoId);
+						res.push(info.items[0]);
+					} catch(e) {
+						reject(e);
+					}
 				}
 				resolve(res);
 			} catch(e) {

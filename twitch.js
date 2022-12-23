@@ -164,70 +164,118 @@ const getChatters = () => {
 const twitch = {
 	getVODS: async () => {
 		return new Promise((resolve, reject) => {
-			getToken(async (at) => {
-				let pagination = undefined;
-				const res = [];
-				do {
-					const r = await getVODPage(at, pagination);
-					res.push(...r.data);
-					pagination = r.pagination.cursor;
-				}
-				while(pagination)
-				resolve(res);
-			});
+			try {
+				getToken(async (at) => {
+					try {
+						let pagination = undefined;
+						const res = [];
+						do {
+							const r = await getVODPage(at, pagination);
+							res.push(...r.data);
+							pagination = r.pagination.cursor;
+						}
+						while(pagination)
+						resolve(res);
+					} catch(e) {
+						reject(e)
+					}
+				});
+			} catch(e) {
+				reject(e)
+			}
 		});
 	},
 
 	getClips: async () => {
 		return new Promise((resolve, reject) => {
-			getToken(async (at) => {
-				let pagination = undefined;
-				const res = [];
-				do {
-					const r = await getClipsPage(at, pagination);
-					res.push(...r.data);
-					pagination = r.pagination.cursor;
-				}
-				while(pagination)
-				resolve(res);
-			});
+			try {
+				getToken(async (at) => {
+					try {
+						let pagination = undefined;
+						const res = [];
+						do {
+							const r = await getClipsPage(at, pagination);
+							res.push(...r.data);
+							pagination = r.pagination.cursor;
+						}
+						while(pagination)
+						resolve(res);
+					} catch(e) {
+						reject(e)
+					}
+				});
+			} catch(e) {
+				reject(e)
+			}
 		});
 	},
 
 	getChannel: async () => {
 		return new Promise((resolve, reject) => {
-			getToken(async (at) => {
-				const aStreamers = await getStreamers(at);
-				const stream = aStreamers.data.filter(s => s.broadcaster_login === config["BROADCASTER"]["LOGIN"])[0];
-				resolve(stream);
-			});
+			try {
+				getToken(async (at) => {
+					try {
+						const aStreamers = await getStreamers(at);
+						const stream = aStreamers.data.filter(s => s.broadcaster_login === config["BROADCASTER"]["LOGIN"])[0];
+						resolve(stream);
+					} catch(e) {
+						reject(e)
+					}
+				});
+			} catch(e) {
+				reject(e)
+			}
 		});
 	},
 
 	getGame: async (id) => {
 		return new Promise((resolve, reject) => {
-			getToken(async (at) => {
-				const games = await getGames(at, id);
-				resolve(games.data[0]);
-			});
+			try {
+				getToken(async (at) => {
+					try {
+						const games = await getGames(at, id);
+						resolve(games.data[0]);
+					} catch(e) {
+						reject(e)
+					}
+				});
+			} catch(e) {
+				reject(e)
+			}
 		});
 	},
 
 	getUserById: async (id) => {
 		return new Promise((resolve, reject) => {
-			getToken(async (at) => {
-				const users = await getUsersById(at, id);
-				resolve(users.data[0]);
-			});
+			try {
+				getToken(async (at) => {
+					try {
+						const users = await getUsersById(at, id);
+						resolve(users.data[0]);
+					} catch(e) {
+						reject(e)
+					}
+				});
+			} catch(e) {
+				reject(e)
+			}
 		});
 	},
 
 	getUserByName: async (id) => {
 		return new Promise((resolve, reject) => {
-			getToken(async (at) => {
-				const users = await getUsersByName(at, id);
-				resolve(users.data[0]);
-			});
+			try {
+				getToken(async (at) => {
+					try {
+						const users = await getUsersByName(at, id);
+						resolve(users.data[0]);
+					} catch(e) {
+						reject(e)
+					}
+				});
+			} catch(e) {
+				reject(e)
+			}
 		});
 	},
 

@@ -68,7 +68,12 @@ const data = {
 				.addStringOption(option => option.setName('twitch-account').setDescription('Le compte Twitch').setRequired(true)),
 			execute: async (client, interaction) => {
 				const accountName = interaction.options.get('twitch-account').value;
-				const userTwitch = await twitch.getUserByName(accountName);
+				let userTwitch = {};
+				try {
+					userTwitch = await twitch.getUserByName(accountName);
+				} catch(e) {
+					return await interaction.reply({ content: `L'utilisateur ${accountName} n'existe pas`, ephemeral: true });
+				}
 				const code = S4().toUpperCase();
 				const embedVerif = new EmbedBuilder()
 					.setColor(0x3B5998)
