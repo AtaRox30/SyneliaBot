@@ -6,7 +6,7 @@ const youtube = require('./youtube');
 const mongo = require('./mongo');
 const commandsManager = require('./deploy-commands');
 const config = require('./config.json');
-// const ingredients = require('./ingredients.json');
+const ingredients = require('./ingredients.json');
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages]
@@ -25,10 +25,14 @@ const youtubeChecker = async () => {
 	checkVODS(channel);
 };
 
-// const twitchChatChecker = async () => {
-// 	const tenDrinker = await distributePoint();
-// 	await distributeIngredient(tenDrinker);
-// };
+const twitchChatChecker = async () => {
+	const channel = await twitch.getChannel();
+	if(channel.is_live)
+	{
+		const tenDrinker = await distributePoint();
+		await distributeIngredient(tenDrinker);
+	}
+};
 
 const checkStream = async () => {
 	const channel = await twitch.getChannel();
@@ -77,38 +81,43 @@ const checkClips = async (channel) => {
 	);
 }
 
-// const distributePoint = async () => {
-// 	// const chatters = await twitch.getChatters();
-// 	const chatters = ["atarox30"];
-// 	const ret = [];
-// 	chatters.forEach(chatter => {
-// 		const drinker = drinkers.filter(v => v.twitch.login === chatter);
-// 		if(!drinker.length) return
-// 		drinker[0].points = drinker[0].points + 1;
-// 		if(drinker[0].points >= 10) ret.push(drinker[0]);
-// 		fs.writeFileSync("./tea-game.json", JSON.stringify(teaGameManager, null, 4));
-// 	});
-// 	return ret;
-// }
+const distributePoint = async () => {
+	const chatters = await twitch.getChatters();
+	const drinkers = await mongo.getDrinkers();
+	const ret = [];
+	chatters.forEach(chatter => {
+		const drinker = drinkers.filter(v => v.twitchId === chatter);
+		if(!drinker.length) return
+		mongo.incrementPoints(drinker[0].twitchId, drinker[0].points);
+		if(drinker[0].points >= 9) ret.push(drinker[0]);
+	});
+	return ret;
+}
 
-// const distributeIngredient = async (worthDrinkers) => {
-// 	worthDrinkers.forEach(v => {
-// 		const ingredient = getRandomIngredient();
-// 		v.points = 0;
-// 		v.ingredients[ingredient] = (v.ingredients[ingredient] ?? 0) + 1;
-// 		fs.writeFileSync("./tea-game.json", JSON.stringify(teaGameManager, null, 4));
-// 	});
-// }
+const distributeIngredient = async (worthDrinkers) => {
+	worthDrinkers.forEach(async v => {
+		let haveAmount = true;
+		const ingredient = getRandomIngredient();
+		const currentIngredientStat = v.ingredients.filter(v => v.code === ingredient);
+		if(currentIngredientStat.length === 0)
+		{
+			await mongo.insertIngredientProfile({ "twitchId" : v.twitchId }, ingredient);
+			haveAmount = false;
+		}
+		mongo.resetPointFromDrinker({ "twitchId" : v.twitchId });
+		mongo.incrementAmount(v.twitchId, ingredient, (haveAmount ? currentIngredientStat[0].amount : 0));
+	});
+}
 
-// const getRandomIngredient = () => {
-// 	const toGive = [];
-// 	Object.entries(ingredients).forEach(k => {
-// 		for(let i = 0; i < k[1].weight; i++) toGive.push(k[0]);
-// 	});
-// 	toGive.sort((a, b) => 0.5 - Math.random());
-// 	const ingredient = toGive[Math.floor(Math.random() * toGive.length)]
-// 	return ingredient;
-// }
+const getRandomIngredient = () => {
+	const toGive = [];
+	Object.entries(ingredients).forEach(k => {
+		for(let i = 0; i < k[1].weight; i++) toGive.push(k[0]);
+	});
+	toGive.sort((a, b) => 0.5 - Math.random());
+	const ingredient = toGive[Math.floor(Math.random() * toGive.length)]
+	return ingredient;
+}
 
 const notifyStream = async (channel) => {
 	/*
@@ -320,7 +329,7 @@ client.on("ready", async () => {
     console.log("Discord bot ready");
 	setInterval(twitchChecker, 10000);
 	setInterval(youtubeChecker, 300000);
-	// setInterval(twitchChatChecker, 60000);
+	setInterval(twitchChatChecker, 60000);
 });
 
 client.on(Events.InteractionCreate, async interaction => {
