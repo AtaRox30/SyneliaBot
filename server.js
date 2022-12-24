@@ -278,6 +278,7 @@ const notifyClips = (channel, aClips) => {
 }
 
 const notifyIngredientGot = (aToNotify) => {
+	const colors = [0x75AD57, 0x53A9E9, 0xA68BD1, 0xEE8D0C, 0xD82D42];
 	aToNotify.forEach(async drinker => {
 		const drinkerProfile = await mongo.getDrinkerProfile({ "twitchId" : drinker.twitchId });
 		const descriptions = ingredients[drinker.ingredient].descriptions;
@@ -286,7 +287,7 @@ const notifyIngredientGot = (aToNotify) => {
 		const user = client.users.cache.get(drinkerProfile.discordId);
 		const channelDisc = guild.channels.cache.get(config["DISCORD"]["CHANNELS"]["HARVEST_TEA"]);
 		const exampleEmbed = new EmbedBuilder()
-			.setColor(0x4A9428)
+			.setColor(colors[5 - ingredients[drinker.ingredient].weight])
 			.setTitle("Vous avez récolté : " + ingredients[drinker.ingredient].name)
 			.setAuthor({ name: user.username, iconURL: user.avatarURL() })
 			.setThumbnail("attachment://ingredient.png")
