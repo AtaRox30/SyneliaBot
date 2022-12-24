@@ -1,66 +1,130 @@
 {
 	"FRAISE": {
 		"name": "Fraise",
+		"url": "./assets/fraise.png",
+		"descriptions": [
+			"*Parfum d'été*"
+		],
 		"weight": 5
 	},
 	"CARAMEL": {
 		"name": "Caramel",
+		"url": "./assets/caramel.png",
+		"descriptions": [
+			"Aucune description"
+		],
 		"weight": 5
 	},
 	"POMME": {
 		"name": "Pomme",
+		"url": "./assets/pomme.png",
+		"descriptions": [
+			"Aucune description"
+		],
 		"weight": 5
 	},
 	"CERISE": {
 		"name": "Cerise",
+		"url": "./assets/cerise.png",
+		"descriptions": [
+			"Aucune description"
+		],
 		"weight": 5
 	},
 	"FRAMBOISE": {
 		"name": "Framboise",
+		"url": "./assets/framboise.png",
+		"descriptions": [
+			"Aucune description"
+		],
 		"weight": 5
 	},
 	"CITRON": {
 		"name": "Citron",
+		"url": "./assets/citron.png",
+		"descriptions": [
+			"Aucune description"
+		],
 		"weight": 5
 	},
 	"ORANGE": {
 		"name": "Orange",
+		"url": "./assets/orange.png",
+		"descriptions": [
+			"Aucune description"
+		],
 		"weight": 5
 	},
 	"GROSEILLE": {
 		"name": "Groseille",
+		"url": "./assets/groseille.png",
+		"descriptions": [
+			"Aucune description"
+		],
 		"weight": 4
 	},
 	"AMANDE": {
 		"name": "Amande",
+		"url": "./assets/amande.png",
+		"descriptions": [
+			"Aucune description"
+		],
 		"weight": 4
 	},
 	"PECHE": {
 		"name": "Pêche",
+		"url": "./assets/peche.png",
+		"descriptions": [
+			"Aucune description"
+		],
 		"weight": 4
 	},
 	"CANNELLE": {
 		"name": "Cannelle",
+		"url": "./assets/cannelle.png",
+		"descriptions": [
+			"Aucune description"
+		],
 		"weight": 3
 	},
 	"VANILLE": {
 		"name": "Vanille",
+		"url": "./assets/vanille.png",
+		"descriptions": [
+			"Aucune description"
+		],
 		"weight": 3
 	},
 	"FLEUR_ORANGER": {
 		"name": "Fleur d'oranger",
+		"url": "./assets/sakura_flower.png",
+		"descriptions": [
+			"Aucune description"
+		],
 		"weight": 2
 	},
 	"VIOLETTE": {
 		"name": "Violette",
+		"url": "./assets/sakura_flower.png",
+		"descriptions": [
+			"Aucune description"
+		],
 		"weight": 1
 	},
 	"BERGAMOTE": {
 		"name": "Bergamote",
+		"url": "./assets/bergamotte.png",
+		"descriptions": [
+			"Aucune description"
+		],
 		"weight": 1
 	},
 	"RHUBARBE": {
 		"name": "Rhubarbe",
+		"url": "./assets/sakura_flower.png",
+		"descriptions": [
+			"Aucune description"
+		],
 		"weight": 1
 	}
 }

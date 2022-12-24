@@ -1,5 +1,4 @@
 require('dotenv').config();
-const axios = require('axios');
 const { Client, GatewayIntentBits, EmbedBuilder, REST, Routes, Events } = require('discord.js');
 const twitch = require('./twitch');
 const youtube = require('./youtube');
@@ -30,7 +29,8 @@ const twitchChatChecker = async () => {
 	if(channel.is_live)
 	{
 		const tenDrinker = await distributePoint();
-		await distributeIngredient(tenDrinker);
+		const aToNotify = await distributeIngredient(tenDrinker);
+		notifyIngredientGot(aToNotify);
 	}
 };
 
@@ -89,12 +89,13 @@ const distributePoint = async () => {
 		const drinker = drinkers.filter(v => v.twitchId === chatter);
 		if(!drinker.length) return
 		mongo.incrementPoints(drinker[0].twitchId, drinker[0].points);
-		if(drinker[0].points >= 9) ret.push(drinker[0]);
+		if(drinker[0].points >= 19) ret.push(drinker[0]);
 	});
 	return ret;
 }
 
 const distributeIngredient = async (worthDrinkers) => {
+	const notifier = [];
 	worthDrinkers.forEach(async v => {
 		let haveAmount = true;
 		const ingredient = getRandomIngredient();
@@ -106,7 +107,9 @@ const distributeIngredient = async (worthDrinkers) => {
 		}
 		mongo.resetPointFromDrinker({ "twitchId" : v.twitchId });
 		mongo.incrementAmount(v.twitchId, ingredient, (haveAmount ? currentIngredientStat[0].amount : 0));
+		notifier.push({ "twitchId": v.twitchId, "ingredient": ingredient });
 	});
+	return notifier;
 }
 
 const getRandomIngredient = () => {
@@ -115,7 +118,7 @@ const getRandomIngredient = () => {
 		for(let i = 0; i < k[1].weight; i++) toGive.push(k[0]);
 	});
 	toGive.sort((a, b) => 0.5 - Math.random());
-	const ingredient = toGive[Math.floor(Math.random() * toGive.length)]
+	const ingredient = toGive[Math.floor(Math.random() * toGive.length)];
 	return ingredient;
 }
 
@@ -274,6 +277,33 @@ const notifyClips = (channel, aClips) => {
 	});
 }
 
+const notifyIngredientGot = (aToNotify) => {
+	aToNotify.forEach(async drinker => {
+		const drinkerProfile = await mongo.getDrinkerProfile({ "twitchId" : drinker.twitchId });
+		const descriptions = ingredients[drinker.ingredient].descriptions;
+		const randomDescription = descriptions[Math.floor(Math.random() * descriptions.length)]
+		const guild = client.guilds.cache.get(config["DISCORD"]["GUILD_ID"]);
+		const user = client.users.cache.get(drinkerProfile.discordId);
+		const channelDisc = guild.channels.cache.get(config["DISCORD"]["CHANNELS"]["HARVEST_TEA"]);
+		const exampleEmbed = new EmbedBuilder()
+			.setColor(0x4A9428)
+			.setTitle("Vous avez récolté : " + ingredients[drinker.ingredient].name)
+			.setAuthor({ name: user.username, iconURL: user.avatarURL() })
+			.setThumbnail("attachment://ingredient.png")
+			.setDescription(randomDescription)
+			.setTimestamp()
+
+		await channelDisc.send({
+			content: `<@${drinkerProfile.discordId}>`,
+			embeds: [exampleEmbed],
+			files: [{
+				attachment: ingredients[drinker.ingredient].url,
+        		name: 'ingredient.png'
+			}]
+		});
+	});
+}
+
 const registerCommands = () => {
 	(async () => {
 		try {
@@ -329,7 +359,7 @@ client.on("ready", async () => {
     console.log("Discord bot ready");
 	setInterval(twitchChecker, 10000);
 	setInterval(youtubeChecker, 300000);
-	// setInterval(twitchChatChecker, 60000);
+	setInterval(twitchChatChecker, 60000);
 });
 
 client.on(Events.InteractionCreate, async interaction => {
