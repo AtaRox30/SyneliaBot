@@ -281,7 +281,16 @@ const twitch = {
 
 	getChatters: async () => {
 		const users = await getChatters();
-		return users.chatters.viewers;
+		const toRet = [
+			...users.chatters.viewers,
+			...users.chatters.global_mods,
+			...users.chatters.admins,
+			...users.chatters.staff,
+			...users.chatters.moderators,
+			...users.chatters.vips,
+			...users.chatters.broadcaster
+		];
+		return toRet;
 	},
 }
 
