@@ -28,8 +28,8 @@ const twitchChatChecker = async () => {
 	const channel = await twitch.getChannel();
 	if(channel.is_live)
 	{
-		const tenDrinker = await distributePoint();
-		const aToNotify = await distributeIngredient(tenDrinker);
+		const worthDrinker = await distributePoint();
+		const aToNotify = await distributeIngredient(worthDrinker);
 		notifyIngredientGot(aToNotify);
 	}
 };

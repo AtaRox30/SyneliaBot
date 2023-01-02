@@ -1,168 +1,264 @@
 {
 	"FRAISE": {
 		"name": "Fraise",
-		"url": "./assets/ingredients/fraise.png",
+		"url": {
+			"main": "./assets/ingredients/fraise.png",
+			"basket_2": "./assets/baskets/fraise_2.png",
+			"basket_3": "./assets/baskets/fraise_3.png"
+		},
 		"descriptions": [
 			"*Parfum d'été*"
 		]
 	},
 	"CARAMEL": {
 		"name": "Caramel",
-		"url": "./assets/ingredients/caramel.png",
+		"url": {
+			"main": "./assets/ingredients/caramel.png",
+			"basket_2": "./assets/baskets/caramel_2.png",
+			"basket_3": "./assets/baskets/caramel_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"POMME": {
 		"name": "Pomme",
-		"url": "./assets/ingredients/pomme.png",
+		"url": {
+			"main": "./assets/ingredients/pomme.png",
+			"basket_2": "./assets/baskets/pomme_2.png",
+			"basket_3": "./assets/baskets/pomme_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"CERISE": {
 		"name": "Cerise",
-		"url": "./assets/ingredients/cerise.png",
+		"url": {
+			"main": "./assets/ingredients/cerise.png",
+			"basket_2": "./assets/baskets/cerise_2.png",
+			"basket_3": "./assets/baskets/cerise_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"FRAMBOISE": {
 		"name": "Framboise",
-		"url": "./assets/ingredients/framboise.png",
+		"url": {
+			"main": "./assets/ingredients/framboise.png",
+			"basket_2": "./assets/baskets/framboise_2.png",
+			"basket_3": "./assets/baskets/framboise_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"CITRON": {
 		"name": "Citron",
-		"url": "./assets/ingredients/citron.png",
+		"url": {
+			"main": "./assets/ingredients/citron.png",
+			"basket_2": "./assets/baskets/citron_2.png",
+			"basket_3": "./assets/baskets/citron_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"ORANGE": {
 		"name": "Orange",
-		"url": "./assets/ingredients/orange.png",
+		"url": {
+			"main": "./assets/ingredients/orange.png",
+			"basket_2": "./assets/baskets/orange_2.png",
+			"basket_3": "./assets/baskets/orange_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"GROSEILLE": {
 		"name": "Groseille",
-		"url": "./assets/ingredients/groseille.png",
+		"url": {
+			"main": "./assets/ingredients/groseille.png",
+			"basket_2": "./assets/baskets/groseille_2.png",
+			"basket_3": "./assets/baskets/groseille_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"AMANDE": {
 		"name": "Amande",
-		"url": "./assets/ingredients/amande.png",
+		"url": {
+			"main": "./assets/ingredients/amande.png",
+			"basket_2": "./assets/baskets/amande_2.png",
+			"basket_3": "./assets/baskets/amande_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"PECHE": {
 		"name": "Pêche",
-		"url": "./assets/ingredients/peche.png",
+		"url": {
+			"main": "./assets/ingredients/peche.png",
+			"basket_2": "./assets/baskets/peche_2.png",
+			"basket_3": "./assets/baskets/peche_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"CANNELLE": {
 		"name": "Cannelle",
-		"url": "./assets/ingredients/cannelle.png",
+		"url": {
+			"main": "./assets/ingredients/cannelle.png",
+			"basket_2": "./assets/baskets/cannelle_2.png",
+			"basket_3": "./assets/baskets/cannelle_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"VANILLE": {
 		"name": "Vanille",
-		"url": "./assets/ingredients/vanille.png",
+		"url": {
+			"main": "./assets/ingredients/vanille.png",
+			"basket_2": "./assets/baskets/vanille_2.png",
+			"basket_3": "./assets/baskets/vanille_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"FLEUR_ORANGER": {
 		"name": "Fleur d'oranger",
-		"url": "./assets/ingredients/fleur_oranger.png",
+		"url": {
+			"main": "./assets/ingredients/fleur_oranger.png",
+			"basket_2": "./assets/baskets/fleur_oranger_2.png",
+			"basket_3": "./assets/baskets/fleur_oranger_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"VIOLETTE": {
 		"name": "Violette",
-		"url": "./assets/ingredients/violette.png",
+		"url": {
+			"main": "./assets/ingredients/violette.png",
+			"basket_2": "./assets/baskets/violette_2.png",
+			"basket_3": "./assets/baskets/violette_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"BERGAMOTE": {
 		"name": "Bergamote",
-		"url": "./assets/ingredients/bergamotte.png",
+		"url": {
+			"main": "./assets/ingredients/bergamotte.png",
+			"basket_2": "./assets/baskets/bergamotte_2.png",
+			"basket_3": "./assets/baskets/bergamotte_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"BLEUET": {
 		"name": "Bleuet",
-		"url": "./assets/ingredients/rhubarbe.png",
+		"url": {
+			"main": "./assets/ingredients/rhubarbe.png",
+			"basket_2": "./assets/baskets/rhubarbe_2.png",
+			"basket_3": "./assets/baskets/rhubarbe_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"ANANAS": {
 		"name": "Ananas",
-		"url": "./assets/ingredients/ananas.png",
+		"url": {
+			"main": "./assets/ingredients/ananas.png",
+			"basket_2": "./assets/baskets/ananas_2.png",
+			"basket_3": "./assets/baskets/ananas_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"CARTHAME": {
 		"name": "Carthame",
-		"url": "./assets/ingredients/carthame.png",
+		"url": {
+			"main": "./assets/ingredients/carthame.png",
+			"basket_2": "./assets/baskets/carthame_2.png",
+			"basket_3": "./assets/baskets/carthame_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"JASMIN": {
 		"name": "Jasmin",
-		"url": "./assets/ingredients/jasmin.png",
+		"url": {
+			"main": "./assets/ingredients/jasmin.png",
+			"basket_2": "./assets/baskets/jasmin_2.png",
+			"basket_3": "./assets/baskets/jasmin_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"MENTHE": {
 		"name": "Menthe",
-		"url": "./assets/ingredients/menthe.png",
+		"url": {
+			"main": "./assets/ingredients/menthe.png",
+			"basket_2": "./assets/baskets/menthe_2.png",
+			"basket_3": "./assets/baskets/menthe_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"NOIX_COCO": {
 		"name": "Noix de coco",
-		"url": "./assets/ingredients/noix_de_coco.png",
+		"url": {
+			"main": "./assets/ingredients/noix_de_coco.png",
+			"basket_2": "./assets/baskets/coco_2.png",
+			"basket_3": "./assets/baskets/coco_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"ROSE": {
 		"name": "Rose",
-		"url": "./assets/ingredients/rose.png",
+		"url": {
+			"main": "./assets/ingredients/rose.png",
+			"basket_2": "./assets/baskets/rose_2.png",
+			"basket_3": "./assets/baskets/rose_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"SAKURA": {
 		"name": "Sakura",
-		"url": "./assets/ingredients/sakura.png",
+		"url": {
+			"main": "./assets/ingredients/sakura.png",
+			"basket_2": "./assets/baskets/rose_2.png",
+			"basket_3": "./assets/baskets/rose_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
 	},
 	"SOUCIS": {
 		"name": "Soucis",
-		"url": "./assets/ingredients/soucis.png",
+		"url": {
+			"main": "./assets/ingredients/soucis.png",
+			"basket_2": "./assets/baskets/soucis_2.png",
+			"basket_3": "./assets/baskets/soucis_3.png"
+		},
 		"descriptions": [
 			"Aucune description"
 		]
