@@ -1,130 +1,170 @@
 {
 	"FRAISE": {
 		"name": "Fraise",
-		"url": "./assets/fraise.png",
+		"url": "./assets/ingredients/fraise.png",
 		"descriptions": [
 			"*Parfum d'été*"
-		],
-		"weight": 5
+		]
 	},
 	"CARAMEL": {
 		"name": "Caramel",
-		"url": "./assets/caramel.png",
+		"url": "./assets/ingredients/caramel.png",
 		"descriptions": [
 			"Aucune description"
-		],
-		"weight": 5
+		]
 	},
 	"POMME": {
 		"name": "Pomme",
-		"url": "./assets/pomme.png",
+		"url": "./assets/ingredients/pomme.png",
 		"descriptions": [
 			"Aucune description"
-		],
-		"weight": 5
+		]
 	},
 	"CERISE": {
 		"name": "Cerise",
-		"url": "./assets/cerise.png",
+		"url": "./assets/ingredients/cerise.png",
 		"descriptions": [
 			"Aucune description"
-		],
-		"weight": 5
+		]
 	},
 	"FRAMBOISE": {
 		"name": "Framboise",
-		"url": "./assets/framboise.png",
+		"url": "./assets/ingredients/framboise.png",
 		"descriptions": [
 			"Aucune description"
-		],
-		"weight": 5
+		]
 	},
 	"CITRON": {
 		"name": "Citron",
-		"url": "./assets/citron.png",
+		"url": "./assets/ingredients/citron.png",
 		"descriptions": [
 			"Aucune description"
-		],
-		"weight": 5
+		]
 	},
 	"ORANGE": {
 		"name": "Orange",
-		"url": "./assets/orange.png",
+		"url": "./assets/ingredients/orange.png",
 		"descriptions": [
 			"Aucune description"
-		],
-		"weight": 5
+		]
 	},
 	"GROSEILLE": {
 		"name": "Groseille",
-		"url": "./assets/groseille.png",
+		"url": "./assets/ingredients/groseille.png",
 		"descriptions": [
 			"Aucune description"
-		],
-		"weight": 4
+		]
 	},
 	"AMANDE": {
 		"name": "Amande",
-		"url": "./assets/amande.png",
+		"url": "./assets/ingredients/amande.png",
 		"descriptions": [
 			"Aucune description"
-		],
-		"weight": 4
+		]
 	},
 	"PECHE": {
 		"name": "Pêche",
-		"url": "./assets/peche.png",
+		"url": "./assets/ingredients/peche.png",
 		"descriptions": [
 			"Aucune description"
-		],
-		"weight": 4
+		]
 	},
 	"CANNELLE": {
 		"name": "Cannelle",
-		"url": "./assets/cannelle.png",
+		"url": "./assets/ingredients/cannelle.png",
 		"descriptions": [
 			"Aucune description"
-		],
-		"weight": 3
+		]
 	},
 	"VANILLE": {
 		"name": "Vanille",
-		"url": "./assets/vanille.png",
+		"url": "./assets/ingredients/vanille.png",
 		"descriptions": [
 			"Aucune description"
-		],
-		"weight": 3
+		]
 	},
 	"FLEUR_ORANGER": {
 		"name": "Fleur d'oranger",
-		"url": "./assets/sakura_flower.png",
+		"url": "./assets/ingredients/fleur_oranger.png",
 		"descriptions": [
 			"Aucune description"
-		],
-		"weight": 2
+		]
 	},
 	"VIOLETTE": {
 		"name": "Violette",
-		"url": "./assets/violette.png",
+		"url": "./assets/ingredients/violette.png",
 		"descriptions": [
 			"Aucune description"
-		],
-		"weight": 1
+		]
 	},
 	"BERGAMOTE": {
 		"name": "Bergamote",
-		"url": "./assets/bergamotte.png",
+		"url": "./assets/ingredients/bergamotte.png",
 		"descriptions": [
 			"Aucune description"
-		],
-		"weight": 1
+		]
 	},
-	"RHUBARBE": {
-		"name": "Rhubarbe",
-		"url": "./assets/sakura_flower.png",
+	"BLEUET": {
+		"name": "Bleuet",
+		"url": "./assets/ingredients/rhubarbe.png",
 		"descriptions": [
 			"Aucune description"
-		],
-		"weight": 1
+		]
+	},
+	"ANANAS": {
+		"name": "Ananas",
+		"url": "./assets/ingredients/ananas.png",
+		"descriptions": [
+			"Aucune description"
+		]
+	},
+	"CARTHAME": {
+		"name": "Carthame",
+		"url": "./assets/ingredients/carthame.png",
+		"descriptions": [
+			"Aucune description"
+		]
+	},
+	"JASMIN": {
+		"name": "Jasmin",
+		"url": "./assets/ingredients/jasmin.png",
+		"descriptions": [
+			"Aucune description"
+		]
+	},
+	"MENTHE": {
+		"name": "Menthe",
+		"url": "./assets/ingredients/menthe.png",
+		"descriptions": [
+			"Aucune description"
+		]
+	},
+	"NOIX_COCO": {
+		"name": "Noix de coco",
+		"url": "./assets/ingredients/noix_de_coco.png",
+		"descriptions": [
+			"Aucune description"
+		]
+	},
+	"ROSE": {
+		"name": "Rose",
+		"url": "./assets/ingredients/rose.png",
+		"descriptions": [
+			"Aucune description"
+		]
+	},
+	"SAKURA": {
+		"name": "Sakura",
+		"url": "./assets/ingredients/sakura.png",
+		"descriptions": [
+			"Aucune description"
+		]
+	},
+	"SOUCIS": {
+		"name": "Soucis",
+		"url": "./assets/ingredients/soucis.png",
+		"descriptions": [
+			"Aucune description"
+		]
 	}
 }
