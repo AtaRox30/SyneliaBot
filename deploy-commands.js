@@ -161,7 +161,7 @@ const data = {
 				const guild = client.guilds.cache.get(interaction.guildId);
 				const member = guild.members.cache.get(user.id);
 				// Rôle modérateur → 1044662246544003176
-				const hasModRole = member.roles.cache.find(r => r.id === "866285918070898719") || user.id === "236174876933619713";
+				const hasModRole = member.roles.cache.find(r => r.id === "1044662246544003176") || user.id === "236174876933619713";
 				if(!hasModRole)
 				{
 					await interaction.reply(
