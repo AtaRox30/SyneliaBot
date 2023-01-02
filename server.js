@@ -359,7 +359,7 @@ const modalSubmitHandler = async (interaction) => {
 client.on("ready", async () => {
     console.log("Discord bot ready");
 	setInterval(twitchChecker, 10000);
-	setInterval(youtubeChecker, 300000);
+	setInterval(youtubeChecker, 14400000);
 	// setInterval(twitchChatChecker, 60000);
 });
 
