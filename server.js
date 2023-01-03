@@ -66,19 +66,24 @@ const checkVODS = async (channel) => {
 }
 
 const checkClips = async (channel) => {
-	const aClips = await twitch.getClips();
-	const info = await mongo.getGlobalInfo();
-	const aNotified = aClips.filter(v => !info.clips.includes(v.id))
-		.filter(v => v.title !== channel.title).sort((a, b) => new Date(a.created_at) < new Date(b.created_at)).reverse();
-	if(aNotified.length)
-	{
-		//At least one video found, notify
-		notifyClips(channel, aNotified);
+	try {
+		const aClips = await twitch.getClips();
+		const info = await mongo.getGlobalInfo();
+		const aNotified = aClips.filter(v => !info.clips.includes(v.id))
+			.filter(v => v.title !== channel.title).sort((a, b) => new Date(a.created_at) < new Date(b.created_at)).reverse();
+		if(aNotified.length)
+		{
+			//At least one video found, notify
+			notifyClips(channel, aNotified);
+		}
+		mongo.setGlobalInfo(
+			{ "$push" : { "clips" : { "$each" : aNotified.map(v => v.id) } } },
+			{ "upsert" : true }
+		);
+	} catch(e) {
+		console.log('Caught exception in : checkClips');
+		console.log(e);
 	}
-	mongo.setGlobalInfo(
-		{ "$push" : { "clips" : { "$each" : aNotified.map(v => v.id) } } },
-		{ "upsert" : true }
-	);
 }
 
 const distributePoint = async () => {
@@ -272,6 +277,7 @@ const notifyClips = (channel, aClips) => {
 			.setImage(thumbVideo)
 
 		await channelDisc.send({
+			content: clip.url,
 			embeds: [exampleEmbed]
 		});
 	});

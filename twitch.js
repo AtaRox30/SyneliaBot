@@ -162,47 +162,19 @@ const getChatters = () => {
 }
 
 const twitch = {
-	getVODS: async () => {
-		return new Promise((resolve, reject) => {
-			try {
-				getToken(async (at) => {
-					try {
-						let pagination = undefined;
-						const res = [];
-						do {
-							const r = await getVODPage(at, pagination);
-							res.push(...r.data);
-							pagination = r.pagination.cursor;
-						}
-						while(pagination)
-						resolve(res);
-					} catch(e) {
-						reject(e)
-					}
-				});
-			} catch(e) {
-				reject(e)
-			}
-		});
-	},
-
 	getClips: async () => {
 		return new Promise((resolve, reject) => {
 			try {
 				getToken(async (at) => {
+					let pagination = undefined;
+					const res = [];
 					try {
-						let pagination = undefined;
-						const res = [];
-						do {
-							const r = await getClipsPage(at, pagination);
-							res.push(...r.data);
-							pagination = r.pagination.cursor;
-						}
-						while(pagination)
-						resolve(res);
+						let r = await getClipsPage(at, pagination);
+						res.push(...r.data);
 					} catch(e) {
-						reject(e)
+						reject(e);
 					}
+					resolve(res);
 				});
 			} catch(e) {
 				reject(e)
