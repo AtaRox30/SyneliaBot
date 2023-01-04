@@ -46,24 +46,24 @@ const checkStream = async () => {
 	return channel;
 }
 
-const checkVODS = async (channel) => {
-	try {
-		const aVods = await youtube.getVODS();
-		const info = await mongo.getGlobalInfo();
-		const aNotified = aVods.filter(v => !info.vods.includes(v.id)).sort((a, b) => new Date(a.publishedAt) < new Date(b.publishedAt)).reverse();
-		if(aNotified.length)
-		{
-			//At least one video found, notify
-			notifyVods(channel, aNotified);
-		}
-		mongo.setGlobalInfo(
-			{ "$push" : { "vods" : { "$each" : aNotified.map(v => v.id) } } },
-			{ "upsert" : true }
-		);
-	} catch(e) {
-		console.log(e);
-	}
-}
+// const checkVODS = async (channel) => {
+// 	try {
+// 		const aVods = await youtube.getVODS();
+// 		const info = await mongo.getGlobalInfo();
+// 		const aNotified = aVods.filter(v => !info.vods.includes(v.id)).sort((a, b) => new Date(a.publishedAt) < new Date(b.publishedAt)).reverse();
+// 		if(aNotified.length)
+// 		{
+// 			//At least one video found, notify
+// 			notifyVods(channel, aNotified);
+// 		}
+// 		mongo.setGlobalInfo(
+// 			{ "$push" : { "vods" : { "$each" : aNotified.map(v => v.id) } } },
+// 			{ "upsert" : true }
+// 		);
+// 	} catch(e) {
+// 		console.log(e);
+// 	}
+// }
 
 const checkClips = async (channel) => {
 	try {
@@ -161,69 +161,69 @@ const notifyStream = async (channel) => {
 	});
 }
 
-const notifyVods = async (channel, aVods) => {
-	aVods.forEach(async vod => {
-		/*
-			channel {
-				display_name: string,
-				game_id: string,
-				game_name: string,
-				thumbnail_url: string,
-				title: string
-			}
+// const notifyVods = async (channel, aVods) => {
+// 	aVods.forEach(async vod => {
+// 		/*
+// 			channel {
+// 				display_name: string,
+// 				game_id: string,
+// 				game_name: string,
+// 				thumbnail_url: string,
+// 				title: string
+// 			}
 
-			vod {
-				publishedAt: string,
-				title: string,
-				description: string,
-				thumbnails: Thumbnail
-			}
+// 			vod {
+// 				publishedAt: string,
+// 				title: string,
+// 				description: string,
+// 				thumbnails: Thumbnail
+// 			}
 
-			Thumbnail {
-				"default": {
-					"url": string,
-					"width": number,
-					"height": number
-				},
-				"medium": {
-					"url": string,
-					"width": number,
-					"height": number
-				},
-				"high": {
-					"url": string,
-					"width": number,
-					"height": number
-				},
-				"standard": {
-					"url": string,
-					"width": number,
-					"height": number
-				},
-				"maxres": {
-					"url": string,
-					"width": number,
-					"height": number
-				}
-			}
-		*/
-		const thumbVideo = vod.snippet.thumbnails.standard.url;
-		const guild = client.guilds.cache.get(config["DISCORD"]["GUILD_ID"]);
-		const channelDisc = guild.channels.cache.get(config["DISCORD"]["CHANNELS"]["VOD"]);
-		const exampleEmbed = new EmbedBuilder()
-			.setColor(0xB07705)
-			.setTitle(vod.snippet.title)
-			.setURL(config["URL"]["YOUTUBE"]["GET_VIDEO_PREFIX"] + vod.id)
-			.setAuthor({ name: channel.display_name, iconURL: channel.thumbnail_url, url: 'https://www.twitch.tv/syneliasan' })
-			.setDescription(vod.snippet.description.length ? vod.snippet.description : "Aucune description")
-			.setThumbnail(channel.thumbnail_url)
-			.setImage(thumbVideo)
+// 			Thumbnail {
+// 				"default": {
+// 					"url": string,
+// 					"width": number,
+// 					"height": number
+// 				},
+// 				"medium": {
+// 					"url": string,
+// 					"width": number,
+// 					"height": number
+// 				},
+// 				"high": {
+// 					"url": string,
+// 					"width": number,
+// 					"height": number
+// 				},
+// 				"standard": {
+// 					"url": string,
+// 					"width": number,
+// 					"height": number
+// 				},
+// 				"maxres": {
+// 					"url": string,
+// 					"width": number,
+// 					"height": number
+// 				}
+// 			}
+// 		*/
+// 		const thumbVideo = vod.snippet.thumbnails.standard.url;
+// 		const guild = client.guilds.cache.get(config["DISCORD"]["GUILD_ID"]);
+// 		const channelDisc = guild.channels.cache.get(config["DISCORD"]["CHANNELS"]["VOD"]);
+// 		const exampleEmbed = new EmbedBuilder()
+// 			.setColor(0xB07705)
+// 			.setTitle(vod.snippet.title)
+// 			.setURL(config["URL"]["YOUTUBE"]["GET_VIDEO_PREFIX"] + vod.id)
+// 			.setAuthor({ name: channel.display_name, iconURL: channel.thumbnail_url, url: 'https://www.twitch.tv/syneliasan' })
+// 			.setDescription(vod.snippet.description.length ? vod.snippet.description : "Aucune description")
+// 			.setThumbnail(channel.thumbnail_url)
+// 			.setImage(thumbVideo)
 
-		await channelDisc.send({
-			embeds: [exampleEmbed]
-		});
-	});
-}
+// 		await channelDisc.send({
+// 			embeds: [exampleEmbed]
+// 		});
+// 	});
+// }
 
 const notifyClips = (channel, aClips) => {
 	aClips.forEach(async clip => {
@@ -365,7 +365,7 @@ const modalSubmitHandler = async (interaction) => {
 client.on("ready", async () => {
     console.log("Discord bot ready");
 	setInterval(twitchChecker, 10000);
-	setInterval(youtubeChecker, 14400000);
+	// setInterval(youtubeChecker, 14400000);
 	// setInterval(twitchChatChecker, 60000);
 });
 
