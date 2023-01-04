@@ -19,10 +19,10 @@ const twitchChecker = async () => {
 	checkClips(channel);
 };
 
-const youtubeChecker = async () => {
-	const channel = await twitch.getChannel();
-	checkVODS(channel);
-};
+// const youtubeChecker = async () => {
+// 	const channel = await twitch.getChannel();
+// 	checkVODS(channel);
+// };
 
 const twitchChatChecker = async () => {
 	const channel = await twitch.getChannel();
@@ -41,6 +41,11 @@ const checkStream = async () => {
 	{
 		//Streamer wasn't streaming the last time we checked, but is streaming now, so we send
 		notifyStream(channel);
+	}
+	if(info.is_live && !channel.is_live)
+	{
+		//Streamer was streaming the last time we checked, but is not streaming now, so we remove the alert
+		deleteStreamNotification(info.current_message_alert_id);
 	}
 	mongo.setGlobalInfo({ "$set" : { "is_live" : channel.is_live } });
 	return channel;
@@ -138,7 +143,7 @@ const notifyStream = async (channel) => {
 		}
 	*/
   
-  const storedAlert = (await mongo.getGlobalInfo()).stream_alert_message;
+	const storedAlert = (await mongo.getGlobalInfo()).stream_alert_message;
   
 	const replaceEnv = (string) => string.replace("$TITRE", channel.title)
 		.replace("$IMG", channel.thumbnail_url)
@@ -155,10 +160,20 @@ const notifyStream = async (channel) => {
 		.setDescription(replaceEnv(storedAlert.description))
 		.setThumbnail(replaceEnv(storedAlert.thumbnail))
 
-	await channelDisc.send({
+	const message = await channelDisc.send({
 		content: '@everyone',
 		embeds: [embed]
 	});
+
+	mongo.setGlobalInfo({ "$set" : { "current_message_alert_id" : message.id } });
+}
+
+const deleteStreamNotification = async (message_id) => {
+	const guild = client.guilds.cache.get(config["DISCORD"]["GUILD_ID"]);
+	const channelDisc = guild.channels.cache.get(config["DISCORD"]["CHANNELS"]["ONLINE"]);
+	channelDisc.messages.fetch(message_id).then(msg => msg.delete());
+
+	mongo.setGlobalInfo({ "$set" : { "current_message_alert_id" : "" } });
 }
 
 // const notifyVods = async (channel, aVods) => {
