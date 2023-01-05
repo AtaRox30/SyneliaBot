@@ -15,7 +15,8 @@ const commands = commandsManager.commands;
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN);
 
 const twitchChecker = async () => {
-	await checkClips(await checkStream());
+	await checkStream()
+	// await checkClips();
 	setTimeout(twitchChecker, 10000);
 };
 
@@ -387,7 +388,7 @@ client.on("ready", async () => {
 		]
 	});
     console.log("Discord bot ready");
-	// twitchChecker();
+	twitchChecker();
 	// setInterval(youtubeChecker, 14400000);
 	// setInterval(twitchChatChecker, 60000);
 });
