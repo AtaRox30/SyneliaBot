@@ -15,7 +15,7 @@ const commands = commandsManager.commands;
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN);
 
 const twitchChecker = async () => {
-	await checkStream()
+	// await checkStream()
 	// await checkClips();
 	setTimeout(twitchChecker, 10000);
 };
@@ -151,8 +151,8 @@ const notifyStream = async (channel) => {
 		.replace("$NOM", channel.display_name)
 		.replace("$JEU", channel.game_name);
 
-	const guild = client.guilds.cache.get(config["DISCORD"]["GUILD_ID"]);
-	const channelDisc = guild.channels.cache.get(config["DISCORD"]["CHANNELS"]["ONLINE"]);
+	const guild = client.guilds.cache.get(config["DISCORD"][process.env.PROFILE.toUpperCase()]["GUILD_ID"]);
+	const channelDisc = guild.channels.cache.get(config["DISCORD"][process.env.PROFILE.toUpperCase()]["CHANNELS"]["ONLINE"]);
 	const embed = new EmbedBuilder()
 		.setColor(replaceEnv(storedAlert.color))
 		.setTitle(replaceEnv(storedAlert.title))
@@ -170,8 +170,8 @@ const notifyStream = async (channel) => {
 }
 
 const deleteStreamNotification = async (message_id) => {
-	const guild = client.guilds.cache.get(config["DISCORD"]["GUILD_ID"]);
-	const channelDisc = guild.channels.cache.get(config["DISCORD"]["CHANNELS"]["ONLINE"]);
+	const guild = client.guilds.cache.get(config["DISCORD"][process.env.PROFILE.toUpperCase()]["GUILD_ID"]);
+	const channelDisc = guild.channels.cache.get(config["DISCORD"][process.env.PROFILE.toUpperCase()]["CHANNELS"]["ONLINE"]);
 	channelDisc.messages.fetch(message_id).then(msg => msg.delete());
 
 	mongo.setGlobalInfo({ "$set" : { "current_message_alert_id" : "" } });
@@ -224,8 +224,8 @@ const deleteStreamNotification = async (message_id) => {
 // 			}
 // 		*/
 // 		const thumbVideo = vod.snippet.thumbnails.standard.url;
-// 		const guild = client.guilds.cache.get(config["DISCORD"]["GUILD_ID"]);
-// 		const channelDisc = guild.channels.cache.get(config["DISCORD"]["CHANNELS"]["VOD"]);
+// 		const guild = client.guilds.cache.get(config["DISCORD"][process.env.PROFILE.toUpperCase()]["GUILD_ID"]);
+// 		const channelDisc = guild.channels.cache.get(config["DISCORD"][process.env.PROFILE.toUpperCase()]["CHANNELS"]["VOD"]);
 // 		const exampleEmbed = new EmbedBuilder()
 // 			.setColor(0xB07705)
 // 			.setTitle(vod.snippet.title)
@@ -282,8 +282,8 @@ const notifyClips = (channel, aClips) => {
 		const creator = await twitch.getUserById(clip.creator_id);
 		const thumbGame = game.box_art_url.replace("{width}", 285).replace("{height}", 380);
 		const thumbVideo = clip.thumbnail_url.replace("%{width}", 800).replace("%{height}", 450);
-		const guild = client.guilds.cache.get(config["DISCORD"]["GUILD_ID"]);
-		const channelDisc = guild.channels.cache.get(config["DISCORD"]["CHANNELS"]["CLIPS"]);
+		const guild = client.guilds.cache.get(config["DISCORD"][process.env.PROFILE.toUpperCase()]["GUILD_ID"]);
+		const channelDisc = guild.channels.cache.get(config["DISCORD"][process.env.PROFILE.toUpperCase()]["CHANNELS"]["CLIPS"]);
 		const exampleEmbed = new EmbedBuilder()
 			.setColor(0x4A9428)
 			.setTitle(clip.title)
@@ -305,9 +305,9 @@ const notifyIngredientGot = (aToNotify) => {
 		const drinkerProfile = await mongo.getDrinkerProfile({ "twitchId" : drinker.twitchId });
 		const descriptions = ingredients[drinker.ingredient].descriptions;
 		const randomDescription = descriptions[Math.floor(Math.random() * descriptions.length)]
-		const guild = client.guilds.cache.get(config["DISCORD"]["GUILD_ID"]);
+		const guild = client.guilds.cache.get(config["DISCORD"][process.env.PROFILE.toUpperCase()]["GUILD_ID"]);
 		const user = client.users.cache.get(drinkerProfile.discordId);
-		const channelDisc = guild.channels.cache.get(config["DISCORD"]["CHANNELS"]["HARVEST_TEA"]);
+		const channelDisc = guild.channels.cache.get(config["DISCORD"][process.env.PROFILE.toUpperCase()]["CHANNELS"]["HARVEST_TEA"]);
 		const exampleEmbed = new EmbedBuilder()
 			.setColor(colors[5 - ingredients[drinker.ingredient].weight])
 			.setTitle("Vous avez récolté : " + ingredients[drinker.ingredient].name)
@@ -334,7 +334,7 @@ const registerCommands = () => {
 	
 			// The put method is used to fully refresh all commands in the guild with the current set
 			const data = await rest.put(
-				Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, config["DISCORD"]["GUILD_ID"]),
+				Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, config["DISCORD"][process.env.PROFILE.toUpperCase()]["GUILD_ID"]),
 				{ body: commands.map(v => v.data) },
 			);
 	
@@ -379,14 +379,17 @@ const modalSubmitHandler = async (interaction) => {
 }
 
 client.on("ready", async () => {
-	client.user.setPresence({
-		status: 'idle',
-		activities: [
-			{
-				name: "Maintenance"
-			}
-		]
-	});
+	if(process.env.PROFILE === "dev")
+	{
+		client.user.setPresence({
+			status: 'idle',
+			activities: [
+				{
+					name: "Maintenance"
+				}
+			]
+		});
+	}
     console.log("Discord bot ready");
 	twitchChecker();
 	// setInterval(youtubeChecker, 14400000);
