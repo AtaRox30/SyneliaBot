@@ -36,8 +36,8 @@ const twitchChatChecker = async () => {
 };
 
 const checkStream = async () => {
-	const channel = await twitch.getChannel();
-	const info = await mongo.getGlobalInfo();
+	let channel = await twitch.getChannel();
+	let info = await mongo.getGlobalInfo();
 	// if(!info.is_live && channel.is_live)
 	// {
 	// 	//Streamer wasn't streaming the last time we checked, but is streaming now, so we send
@@ -49,6 +49,8 @@ const checkStream = async () => {
 	// 	deleteStreamNotification(info.current_message_alert_id);
 	// }
 	mongo.setGlobalInfo({ "$set" : { "is_live" : channel.is_live } });
+	channel = null;
+	info = null;
 	return channel;
 }
 
