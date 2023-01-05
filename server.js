@@ -378,8 +378,16 @@ const modalSubmitHandler = async (interaction) => {
 }
 
 client.on("ready", async () => {
+	client.user.setPresence({
+		status: 'idle',
+		activities: [
+			{
+				name: "Maintenance"
+			}
+		]
+	});
     console.log("Discord bot ready");
-	twitchChecker();
+	// twitchChecker();
 	// setInterval(youtubeChecker, 14400000);
 	// setInterval(twitchChatChecker, 60000);
 });
