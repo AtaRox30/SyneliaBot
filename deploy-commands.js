@@ -1,6 +1,7 @@
-const { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, EmbedBuilder } = require('discord.js');
-// const Jimp = require('jimp');
+const { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, EmbedBuilder, ButtonStyle, ButtonBuilder } = require('discord.js');
+const fs = require('fs');
 const twitch = require('./twitch');
+const tools = require('./ingredientsTools');
 const mongo = require('./mongo');
 const comfy = require('./comfy');
 
@@ -27,36 +28,36 @@ const insertOrUpdateDrinker = async (discordId, name) => {
 	}
 }
 
-// function fill(color) {
-//     return function (x, y, offset) {
-//       this.bitmap.data.writeUInt32BE(color, offset, true);
-//     }
-// }
+const buildEmbedIngredientsRecap = async (userId, page) => {
+	return new Promise(async (res, rej) => {
+		const drinker = await mongo.getDrinkerProfile({ "discordId" : userId });
+		if(!drinker)
+		{
+			rej({ success: false, error: 'NO_DRINKER' });
+		}
+		const url = [];
+		drinker.ingredients.slice((page - 1) * 9, page * 9).forEach(v => url.push(tools.buildBasket(v.code, v.amount)));
+		Promise.all(url).then(() => Promise.all(url))
+		.then(async (data) => {
+			const store = await tools.buildStore(...data);
 
-// const buildIngredientsRecapImage = async (userId) => {
-// 	let width = 205;
-//     let height = 30 + 5 * 20;
-// 	return new Promise((res, rej) => {
-// 		new Jimp(width, height, "white", async function(err, image) {
-// 			if(err) rej(err);
-// 			const font = await Jimp.loadFont(Jimp.FONT_SANS_12_BLACK);
-// 			image.print(font, 20, 2, "Rang");
-// 			image.print(font, 70, 2, "Pseudo");
-// 			image.print(font, 150, 2, "Points");
-// 			image.scan(0, 20, width, 1, fill("black"));
-// 			let y = 25;
-// 			for(let i = 0; i < 5; i++) {
-// 				image.print(font, 30, y, "1000");
-// 				image.print(font, 70, y, "1000");
-// 				image.print(font, 165, y, "1000");
-// 				y += 20;
-// 			}
-	
-// 			await image.writeAsync("./classement.png");
-// 			res(true);
-// 		});
-// 	});
-// }
+			const embedVerif = new EmbedBuilder()
+				.setColor(0x3B5998)
+				.setTitle(`Entrepôt (Page ${page})`)
+				.setDescription("Ingredients en votre possession")
+				.setImage("attachment://store.png");
+			
+			// new ButtonBuilder().setCustomId('ingredients-previous').setLabel('Précédant').setStyle(ButtonStyle.Secondary)
+			// new ButtonBuilder().setCustomId('ingredients-next').setLabel('Suivant').setStyle(ButtonStyle.Secondary)
+			const comps = [];
+			if(page > 1) comps.push(new ButtonBuilder().setCustomId('ingredients-previous').setLabel('Précédant').setStyle(ButtonStyle.Secondary));
+			if(page < drinker.ingredients.length / 9) comps.push(new ButtonBuilder().setCustomId('ingredients-next').setLabel('Suivant').setStyle(ButtonStyle.Secondary));
+			const row = new ActionRowBuilder().addComponents(...comps);
+			res({ success: true, embed: embedVerif, store: store, links: data, row: row, pagination: comps.length > 0 });
+		})
+		.catch(e => rej({ success: false, error: 'PROMISE_REJECTION', message: e }))
+	})
+}
 
 const S4 = () => {return (((1+Math.random())*0x10000)|0).toString(16).substring(1)};
 
@@ -126,19 +127,86 @@ const data = {
 				await interaction.reply({ content: 'Un message vous a été envoyé', ephemeral: true });
 			},
 		},
-		// // View ingredients in stocks
-		// {
-		// 	data: new SlashCommandBuilder().setName('ingredients').setDescription('Consultation des ingredients en votre possession'),
-		// 	execute: async (client, interaction) => {
-		// 		await buildIngredientsRecapImage(interaction.user.id);
-		// 		await sendToAuthor(client, interaction, {
-		// 			content: "Voici les ingredients en votre possession",
-		// 			files: ["./classement.png"]
-		// 		});
-		// 		fs.unlink("./classement.png", function() {});
-		// 		await interaction.reply({ content: 'Vos ingredients vous ont été envoyés en privé', ephemeral: true });
-		// 	},
-		// },
+		// View ingredients in stocks
+		{
+			data: new SlashCommandBuilder().setName('ingredients').setDescription('Consultation des ingredients en votre possession'),
+			execute: async (client, interaction) => {
+				try {
+					const result = await buildEmbedIngredientsRecap(interaction.user.id, 1);
+					const message = {
+						content: "",
+						components: [result.row],
+						embeds: [result.embed],
+						files: [{
+							attachment: result.store,
+							name: 'store.png'
+						}]
+					};
+					if(!result.pagination) delete message.components;
+
+					await sendToAuthor(client, interaction, message);
+					result.links.forEach(v => fs.unlink(v, function() {}))
+					fs.unlink(result.store, function() {});
+					await interaction.reply({ content: 'Vos ingredients vous ont été envoyés en privé', ephemeral: true });
+				} catch(e) {
+					if(e.error === 'NO_DRINKER')
+					{
+						await interaction.reply({ content: 'Vous devez tout d\'abord lié votre compte Twitch à Discord grâce à la commande /link <pseudo_twitch>', ephemeral: true });
+						return;
+					} else console.log(e);
+				}
+			},
+			click: async (interaction) => {
+				const page = interaction.message.embeds[0].data.title.match('Page (\\d+)')[1];
+				const actionType = interaction.customId.split('-')[1];
+				try {
+					if(actionType === 'previous')
+					{
+						const result = await buildEmbedIngredientsRecap(interaction.user.id, Number.parseInt(page) - 1);
+						const message = {
+							content: "",
+							components: [result.row],
+							embeds: [result.embed],
+							files: [{
+								attachment: result.store,
+								name: 'store.png'
+							}]
+						};
+						if(!result.pagination) delete message.components;
+
+						await interaction.update(message);
+
+						result.links.forEach(v => fs.unlink(v, function() {}))
+						fs.unlink(result.store, function() {});
+					}
+					if(actionType === 'next')
+					{
+						const result = await buildEmbedIngredientsRecap(interaction.user.id, Number.parseInt(page) + 1);
+						const message = {
+							content: "",
+							components: [result.row],
+							embeds: [result.embed],
+							files: [{
+								attachment: result.store,
+								name: 'store.png'
+							}]
+						};
+						if(!result.pagination) delete message.components;
+
+						await interaction.update(message);
+
+						result.links.forEach(v => fs.unlink(v, function() {}))
+						fs.unlink(result.store, function() {});
+					}
+				} catch(e) {
+					if(e.error === 'NO_DRINKER')
+					{
+						await interaction.reply({ content: 'Vous devez tout d\'abord lié votre compte Twitch à Discord grâce à la commande /link <pseudo_twitch>', ephemeral: true });
+						return;
+					} else console.log(e);
+				}
+			}
+		},
 		// // View recipes
 		// {
 		// 	data: new SlashCommandBuilder().setName('recipes').setDescription('Consultation des recettes disponible'),
@@ -176,7 +244,7 @@ const data = {
 				const storedAlert = (await mongo.getGlobalInfo()).stream_alert_message;
 
 				const modal = new ModalBuilder()
-					.setCustomId('setup-stream')
+					.setCustomId('setup-stream-modal')
 					.setTitle('Alerte de stream');
 
 				// Create color picker

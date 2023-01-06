@@ -362,7 +362,7 @@ const commandsHandler = async (interaction) => {
 }
 
 const modalSubmitHandler = async (interaction) => {
-	const command = commands.filter(v => v.data.name === interaction.customId);
+	const command = commands.filter(v => v.data.name === interaction.customId.substring(0, v.data.name.length));
 
 	if (!command.length) {
 		console.error(`No command matching ${interaction.customId} was found.`);
@@ -371,6 +371,22 @@ const modalSubmitHandler = async (interaction) => {
 
 	try {
 		await command[0].submit(interaction);
+	} catch (error) {
+		console.error(`Error executing ${interaction.customId}`);
+		console.error(error);
+	}
+}
+
+const buttonsHandler = async (interaction) => {
+	const command = commands.filter(v => v.data.name === interaction.customId.substring(0, v.data.name.length));
+
+	if (!command.length) {
+		console.error(`No button matching ${interaction.customId} was found.`);
+		return;
+	}
+
+	try {
+		await command[0].click(interaction);
 	} catch (error) {
 		console.error(`Error executing ${interaction.customId}`);
 		console.error(error);
@@ -398,6 +414,7 @@ client.on("ready", async () => {
 client.on(Events.InteractionCreate, async interaction => {
 	if(interaction.isChatInputCommand()) return commandsHandler(interaction);
 	if(interaction.isModalSubmit()) return modalSubmitHandler(interaction);
+	if(interaction.isButton()) return buttonsHandler(interaction);
 });
 
 client.login(process.env.DISCORD_BOT_TOKEN);

@@ -21,7 +21,7 @@
 			"CARAMEL": 1,
 			"FLEUR_ORANGER": 1,
 			"VIOLETTE": 1,
-			"VANILLE": 1
+			"ROSE": 1
 		}
 	},
 	"JARDIN_POETES": {
@@ -118,6 +118,96 @@
 			"CITRON": 2,
 			"BERGAMOTE": 1,
 			"GROSEILLE": 1
+		}
+	},
+	"MIRABELLA": {
+		"name": "Mirabella",
+		"ingredients": {
+			"SOUCIS": 1,
+			"CARTHAME": 1,
+			"FLEUR_ORANGER": 1,
+			"GROSEILLE": 1
+		}
+	},
+	"COCO_CALINE": {
+		"name": "Coco caline",
+		"ingredients": {
+			"ANANAS": 1,
+			"NOIX_COCO": 1,
+			"EPICES": 1,
+			"SOUCIS": 1
+		}
+	},
+	"THE_AMOUREUX": {
+		"name": "Thé des amoureux",
+		"ingredients": {
+			"ORANGE": 1,
+			"BLEUET": 1,
+			"ROSE": 1,
+			"SOUCIS": 1
+		}
+	},
+	"THE_KAMA_SUTRA": {
+		"name": "Thé Kâma-Sûtra",
+		"ingredients": {
+			"EPICES": 1,
+			"ORANGE": 1,
+			"CITRON": 1,
+			"SOUCIS": 1
+		}
+	},
+	"AFRICAN_DREAM": {
+		"name": "African dream",
+		"ingredients": {
+			"ORANGE": 1,
+			"FRAISE": 1,
+			"SOUCIS": 1,
+			"EPICES": 1
+		}
+	},
+	"GURUCHKA": {
+		"name": "Guruchka",
+		"ingredients": {
+			"CARTHAME": 1,
+			"BERGAMOTE": 1,
+			"BLEUET": 1,
+			"ROSE": 1
+		}
+	},
+	"BERMUDES": {
+		"name": "Bermudes",
+		"ingredients": {
+			"EPICES": 1,
+			"ANANAS": 1,
+			"JASMIN": 1,
+			"AMANDE": 1
+		}
+	},
+	"JAPAN_TIME": {
+		"name": "Japan time",
+		"ingredients": {
+			"PECHE": 1,
+			"BLEUET": 1,
+			"JASMIN": 1,
+			"ROSE": 1
+		}
+	},
+	"VOYAGEUR": {
+		"name": "Voyageur",
+		"ingredients": {
+			"NOIX_COCO": 1,
+			"FLEUR_ORANGER": 1,
+			"AMANDE": 1,
+			"BERGAMOTE": 1
+		}
+	},
+	"ORIENT": {
+		"name": "Orient",
+		"ingredients": {
+			"ANANAS": 1,
+			"ROSE": 1,
+			"BLEUET": 1,
+			"CITRON": 1
 		}
 	}
 }
