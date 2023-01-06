@@ -73,9 +73,12 @@ const checkStream = async () => {
 const checkClips = async (channel) => {
 	try {
 		const aClips = await twitch.getClips();
+		const aVideosFromPromises = [];
+		aClips.filter(v => v.video_id.length > 0).forEach(v => aVideosFromPromises.push(twitch.getVideoById(v.video_id)));
+		const aVideosInfos = await Promise.all(aVideosFromPromises).then(() => Promise.all(aVideosFromPromises));
 		const info = await mongo.getGlobalInfo();
 		const aNotified = aClips.filter(v => !info.clips.includes(v.id))
-			.filter(v => v.title !== channel.title).sort((a, b) => new Date(a.created_at) < new Date(b.created_at)).reverse();
+			.filter(v => !aVideosInfos.map(v => v.title).includes(v.title)).sort((a, b) => new Date(a.created_at) < new Date(b.created_at)).reverse();
 		if(aNotified.length)
 		{
 			//At least one video found, notify

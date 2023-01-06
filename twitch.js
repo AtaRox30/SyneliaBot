@@ -39,6 +39,27 @@ const getVODPage = (at, pagination) => {
 	});
 }
 
+const getVideoById = (at, id) => {
+	const options = {
+		url: config.URL["TWITCH"]["GET_VIDEOS"] + '?id=' + id,
+		json: true,
+		headers: {
+			'Client-Id': process.env.TWITCH_CLIENT_ID,
+			'Authorization': 'Bearer ' + at
+		}
+	}
+
+	return new Promise(function(resolve, reject) {
+		request.get(options, (err, res, body) => {
+			if (!err && res.statusCode === 200) {
+				resolve(body);
+			} else {
+				reject(err);
+			}
+		})
+	});
+}
+
 const getClipsPage = (at) => {
 	const options = {
 		url: config.URL["TWITCH"]["GET_CLIPS"] + '?broadcaster_id=' + config["BROADCASTER"]["ID"] + '&sort=time',
@@ -241,6 +262,23 @@ const twitch = {
 					try {
 						const users = await getUsersByName(at, id);
 						resolve(users.data[0]);
+					} catch(e) {
+						reject(e)
+					}
+				});
+			} catch(e) {
+				reject(e)
+			}
+		});
+	},
+
+	getVideoById: async (id) => {
+		return new Promise((resolve, reject) => {
+			try {
+				getToken(async (at) => {
+					try {
+						const video = await getVideoById(at, id);
+						resolve(video.data[0]);
 					} catch(e) {
 						reject(e)
 					}
