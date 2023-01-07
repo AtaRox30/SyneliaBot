@@ -47,8 +47,6 @@ const buildEmbedIngredientsRecap = async (userId, page) => {
 				.setDescription("Ingredients en votre possession")
 				.setImage("attachment://store.png");
 			
-			// new ButtonBuilder().setCustomId('ingredients-previous').setLabel('Précédant').setStyle(ButtonStyle.Secondary)
-			// new ButtonBuilder().setCustomId('ingredients-next').setLabel('Suivant').setStyle(ButtonStyle.Secondary)
 			const comps = [];
 			if(page > 1) comps.push(new ButtonBuilder().setCustomId('ingredients-previous').setLabel('Précédant').setStyle(ButtonStyle.Secondary));
 			if(page < drinker.ingredients.length / 9) comps.push(new ButtonBuilder().setCustomId('ingredients-next').setLabel('Suivant').setStyle(ButtonStyle.Secondary));

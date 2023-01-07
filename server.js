@@ -1,7 +1,6 @@
 require('dotenv').config();
 const { Client, GatewayIntentBits, EmbedBuilder, REST, Routes, Events } = require('discord.js');
 const twitch = require('./twitch');
-const youtube = require('./youtube');
 const mongo = require('./mongo');
 const commandsManager = require('./deploy-commands');
 const config = require('./config.json');
@@ -19,19 +18,15 @@ const twitchChecker = async () => {
 	setTimeout(twitchChecker, 10000);
 };
 
-// const youtubeChecker = async () => {
-// 	const channel = await twitch.getChannel();
-// 	checkVODS(channel);
-// };
-
 const twitchChatChecker = async () => {
 	const channel = await twitch.getChannel();
-	if(channel.is_live)
+	if(!channel.is_live)
 	{
 		const worthDrinker = await distributePoint();
 		const aToNotify = await distributeIngredient(worthDrinker);
 		notifyIngredientGot(aToNotify);
 	}
+	setTimeout(twitchChatChecker, 60000);
 };
 
 const checkStream = async () => {
@@ -50,25 +45,6 @@ const checkStream = async () => {
 	mongo.setGlobalInfo({ "$set" : { "is_live" : channel.is_live } });
 	return channel;
 }
-
-// const checkVODS = async (channel) => {
-// 	try {
-// 		const aVods = await youtube.getVODS();
-// 		const info = await mongo.getGlobalInfo();
-// 		const aNotified = aVods.filter(v => !info.vods.includes(v.id)).sort((a, b) => new Date(a.publishedAt) < new Date(b.publishedAt)).reverse();
-// 		if(aNotified.length)
-// 		{
-// 			//At least one video found, notify
-// 			notifyVods(channel, aNotified);
-// 		}
-// 		mongo.setGlobalInfo(
-// 			{ "$push" : { "vods" : { "$each" : aNotified.map(v => v.id) } } },
-// 			{ "upsert" : true }
-// 		);
-// 	} catch(e) {
-// 		console.log(e);
-// 	}
-// }
 
 const checkClips = async (channel) => {
 	try {
@@ -126,11 +102,20 @@ const distributeIngredient = async (worthDrinkers) => {
 }
 
 const getRandomIngredient = () => {
-	const toGive = [];
-	Object.entries(ingredients).forEach(k => {
-		for(let i = 0; i < k[1].weight; i++) toGive.push(k[0]);
-	});
-	toGive.sort((a, b) => 0.5 - Math.random());
+	const drop = Math.random();
+	const rank = drop > 0.6 ? "COMMON" : drop > 0.3 ? "RARE" : drop > 0.15 ? "EPIC" : drop > 0.05 ? "LEGENDARY" : "MYTHICAL";
+	/**
+	 * DROP
+	 * COMMON : 40%
+	 * RARE : 30%
+	 * EPIC : 15%
+	 * LEGENDARY : 10%
+	 * MYTHICAL : 5%
+	 * 
+	 * INGREDIENT VALUE
+	 * (1 - %rank) x %ingredientInCat
+	 */
+	const toGive = Object.entries(ingredients).filter(v => v[1].rank === rank).map(v => v[0]);
 	const ingredient = toGive[Math.floor(Math.random() * toGive.length)];
 	return ingredient;
 }
@@ -178,70 +163,6 @@ const deleteStreamNotification = async (message_id) => {
 
 	mongo.setGlobalInfo({ "$set" : { "current_message_alert_id" : "" } });
 }
-
-// const notifyVods = async (channel, aVods) => {
-// 	aVods.forEach(async vod => {
-// 		/*
-// 			channel {
-// 				display_name: string,
-// 				game_id: string,
-// 				game_name: string,
-// 				thumbnail_url: string,
-// 				title: string
-// 			}
-
-// 			vod {
-// 				publishedAt: string,
-// 				title: string,
-// 				description: string,
-// 				thumbnails: Thumbnail
-// 			}
-
-// 			Thumbnail {
-// 				"default": {
-// 					"url": string,
-// 					"width": number,
-// 					"height": number
-// 				},
-// 				"medium": {
-// 					"url": string,
-// 					"width": number,
-// 					"height": number
-// 				},
-// 				"high": {
-// 					"url": string,
-// 					"width": number,
-// 					"height": number
-// 				},
-// 				"standard": {
-// 					"url": string,
-// 					"width": number,
-// 					"height": number
-// 				},
-// 				"maxres": {
-// 					"url": string,
-// 					"width": number,
-// 					"height": number
-// 				}
-// 			}
-// 		*/
-// 		const thumbVideo = vod.snippet.thumbnails.standard.url;
-// 		const guild = client.guilds.cache.get(config["DISCORD"][process.env.PROFILE.toUpperCase()]["GUILD_ID"]);
-// 		const channelDisc = guild.channels.cache.get(config["DISCORD"][process.env.PROFILE.toUpperCase()]["CHANNELS"]["VOD"]);
-// 		const exampleEmbed = new EmbedBuilder()
-// 			.setColor(0xB07705)
-// 			.setTitle(vod.snippet.title)
-// 			.setURL(config["URL"]["YOUTUBE"]["GET_VIDEO_PREFIX"] + vod.id)
-// 			.setAuthor({ name: channel.display_name, iconURL: channel.thumbnail_url, url: 'https://www.twitch.tv/syneliasan' })
-// 			.setDescription(vod.snippet.description.length ? vod.snippet.description : "Aucune description")
-// 			.setThumbnail(channel.thumbnail_url)
-// 			.setImage(thumbVideo)
-
-// 		await channelDisc.send({
-// 			embeds: [exampleEmbed]
-// 		});
-// 	});
-// }
 
 const notifyClips = (channel, aClips) => {
 	aClips.forEach(async clip => {
@@ -302,18 +223,26 @@ const notifyClips = (channel, aClips) => {
 }
 
 const notifyIngredientGot = (aToNotify) => {
-	const colors = [0x75AD57, 0x53A9E9, 0xA68BD1, 0xEE8D0C, 0xD82D42];
+	const colors = [
+		{ rank: "COMMON", color: 0x75AD57 },
+		{ rank: "RARE", color: 0x53A9E9 },
+		{ rank: "EPIC", color: 0xA68BD1 },
+		{ rank: "LEGENDARY", color: 0xEE8D0C },
+		{ rank: "MYTHICAL", color: 0xD82D42 }
+	];
 	aToNotify.forEach(async drinker => {
 		const drinkerProfile = await mongo.getDrinkerProfile({ "twitchId" : drinker.twitchId });
 		const descriptions = ingredients[drinker.ingredient].descriptions;
-		const randomDescription = descriptions[Math.floor(Math.random() * descriptions.length)]
+		const randomDescription = descriptions[Math.floor(Math.random() * descriptions.length)];
+
 		const guild = client.guilds.cache.get(config["DISCORD"][process.env.PROFILE.toUpperCase()]["GUILD_ID"]);
-		const user = client.users.cache.get(drinkerProfile.discordId);
+		const member = await guild.members.fetch(drinkerProfile.discordId);
 		const channelDisc = guild.channels.cache.get(config["DISCORD"][process.env.PROFILE.toUpperCase()]["CHANNELS"]["HARVEST_TEA"]);
+
 		const exampleEmbed = new EmbedBuilder()
-			.setColor(colors[5 - ingredients[drinker.ingredient].weight])
+			.setColor(colors.filter(v => v.rank === ingredients[drinker.ingredient].rank)[0].color)
 			.setTitle("Vous avez récolté : " + ingredients[drinker.ingredient].name)
-			.setAuthor({ name: user.username, iconURL: user.avatarURL() })
+			.setAuthor({ name: member.user.username, iconURL: member.user.avatarURL() })
 			.setThumbnail("attachment://ingredient.png")
 			.setDescription(randomDescription)
 			.setTimestamp()
@@ -322,7 +251,7 @@ const notifyIngredientGot = (aToNotify) => {
 			content: `<@${drinkerProfile.discordId}>`,
 			embeds: [exampleEmbed],
 			files: [{
-				attachment: ingredients[drinker.ingredient].url,
+				attachment: ingredients[drinker.ingredient].url.main,
         		name: 'ingredient.png'
 			}]
 		});
@@ -410,8 +339,7 @@ client.on("ready", async () => {
 	}
     console.log("Discord bot ready");
 	twitchChecker();
-	// setInterval(youtubeChecker, 14400000);
-	// setInterval(twitchChatChecker, 60000);
+	// twitchChatChecker();
 });
 
 client.on(Events.InteractionCreate, async interaction => {
