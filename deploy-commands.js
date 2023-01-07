@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, EmbedBuilder, ButtonStyle, ButtonBuilder } = require('discord.js');
 const fs = require('fs');
 const twitch = require('./twitch');
-const tools = require('./ingredientsTools');
+const tools = require('./teaTools');
 const mongo = require('./mongo');
 const comfy = require('./comfy');
 

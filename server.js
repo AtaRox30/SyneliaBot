@@ -60,8 +60,11 @@ const checkClips = async (channel) => {
 			//At least one video found, notify
 			notifyClips(channel, aNotified);
 		}
+		const aNotPublished = aClips.filter(c => aVideosInfos.map(v => v.title).includes(c.title)).filter(v => !info.clips.includes(v.id)).map(v => v.id);
+		const aToPush = aNotified.map(v => v.id);
+		aToPush.push(...aNotPublished);
 		mongo.setGlobalInfo(
-			{ "$push" : { "clips" : { "$each" : aNotified.map(v => v.id) } } },
+			{ "$push" : { "clips" : { "$each" : aToPush } } },
 			{ "upsert" : true }
 		);
 	} catch(e) {
@@ -103,7 +106,25 @@ const distributeIngredient = async (worthDrinkers) => {
 
 const getRandomIngredient = () => {
 	const drop = Math.random();
-	const rank = drop > 0.6 ? "COMMON" : drop > 0.3 ? "RARE" : drop > 0.15 ? "EPIC" : drop > 0.05 ? "LEGENDARY" : "MYTHICAL";
+	const dRate = {
+		"COMMON": 0.4,
+		"RARE": 0.3,
+		"EPIC": 0.15,
+		"LEGENDARY": 0.10,
+		"MYTHICAL": 0.05,
+	};
+	const cumul = {
+		"COMMON": 1 - dRate.COMMON,
+		"RARE": 1 - dRate.COMMON - dRate.RARE,
+		"EPIC": 1 - dRate.COMMON - dRate.RARE - dRate.EPIC,
+		"LEGENDARY": 1 - dRate.COMMON - dRate.RARE - dRate.EPIC - dRate.LEGENDARY,
+		"MYTHICAL": 1 - dRate.COMMON - dRate.RARE - dRate.EPIC - dRate.LEGENDARY - dRate.MYTHICAL
+	};
+	const rank = drop > cumul.COMMON ? "COMMON" : 
+		drop > cumul.RARE ? "RARE" : 
+		drop > cumul.EPIC ? "EPIC" : 
+		drop > cumul.LEGENDARY ? "LEGENDARY" : 
+		"MYTHICAL";
 	/**
 	 * DROP
 	 * COMMON : 40%
@@ -113,7 +134,10 @@ const getRandomIngredient = () => {
 	 * MYTHICAL : 5%
 	 * 
 	 * INGREDIENT VALUE
-	 * (1 - %rank) x %ingredientInCat
+	 * 5(1 - %drop) x (1 - 1/%ingredientInCat)
+	 * e.g. Fraise → 5(1 - 0.6) * (1 - 1/7) = 2 * 0.85 = 1.7
+	 * e.g. Bergamotte → 5(1 - 0.1) * (1 - 1/4) = 4.5 * 0.75 = 3.375
+	 * e.g. Carthame → 5(1 - 0.05) * (1 - 1/3) = 4.75 * 0.66 = 3.135
 	 */
 	const toGive = Object.entries(ingredients).filter(v => v[1].rank === rank).map(v => v[0]);
 	const ingredient = toGive[Math.floor(Math.random() * toGive.length)];
