@@ -198,10 +198,10 @@
 		"name": "Bleuet",
 		"rank": "LEGENDARY",
 		"url": {
-			"main": "./assets/ingredients/rhubarbe.png",
+			"main": "./assets/ingredients/bleuet.png",
 			"basket_1": "./assets/baskets/fraise_2.png",
-			"basket_2": "./assets/baskets/rhubarbe_2.png",
-			"basket_3": "./assets/baskets/rhubarbe_3.png"
+			"basket_2": "./assets/baskets/bleuet_2.png",
+			"basket_3": "./assets/baskets/bleuet_3.png"
 		},
 		"descriptions": [
 			"Aucune description"
@@ -280,6 +280,19 @@
 			"basket_1": "./assets/baskets/fraise_2.png",
 			"basket_2": "./assets/baskets/rose_2.png",
 			"basket_3": "./assets/baskets/rose_3.png"
+		},
+		"descriptions": [
+			"Aucune description"
+		]
+	},
+	"RHUBARBE": {
+		"name": "Rhubarbe",
+		"rank": "LEGENDARY",
+		"url": {
+			"main": "./assets/ingredients/rhubarbe.png",
+			"basket_1": "./assets/baskets/fraise_2.png",
+			"basket_2": "./assets/baskets/rhubarbe_2.png",
+			"basket_3": "./assets/baskets/rhubarbe_3.png"
 		},
 		"descriptions": [
 			"Aucune description"

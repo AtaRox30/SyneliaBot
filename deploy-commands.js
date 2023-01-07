@@ -4,6 +4,7 @@ const twitch = require('./twitch');
 const tools = require('./teaTools');
 const mongo = require('./mongo');
 const comfy = require('./comfy');
+const recipes = require('./recipes.json');
 
 const sendToAuthor = async (client, interaction, messageObject) => {
 	const user = interaction.user;
@@ -39,7 +40,7 @@ const buildEmbedIngredientsRecap = async (userId, page) => {
 		drinker.ingredients.slice((page - 1) * 9, page * 9).forEach(v => url.push(tools.buildBasket(v.code, v.amount)));
 		Promise.all(url).then(() => Promise.all(url))
 		.then(async (data) => {
-			const store = await tools.buildStore(...data);
+			const store = await tools.buildIngredientsStore(...data);
 
 			const embedVerif = new EmbedBuilder()
 				.setColor(0x3B5998)
@@ -50,6 +51,36 @@ const buildEmbedIngredientsRecap = async (userId, page) => {
 			const comps = [];
 			if(page > 1) comps.push(new ButtonBuilder().setCustomId('ingredients-previous').setLabel('Précédant').setStyle(ButtonStyle.Secondary));
 			if(page < drinker.ingredients.length / 9) comps.push(new ButtonBuilder().setCustomId('ingredients-next').setLabel('Suivant').setStyle(ButtonStyle.Secondary));
+			const row = new ActionRowBuilder().addComponents(...comps);
+			res({ success: true, embed: embedVerif, store: store, links: data, row: row, pagination: comps.length > 0 });
+		})
+		.catch(e => rej({ success: false, error: 'PROMISE_REJECTION', message: e }))
+	})
+}
+
+const buildEmbedRecipeRecap = async (userId, page) => {
+	return new Promise(async (res, rej) => {
+		const drinker = await mongo.getDrinkerProfile({ "discordId" : userId });
+		if(!drinker)
+		{
+			rej({ success: false, error: 'NO_DRINKER' });
+		}
+		const url = [];
+		Object.entries(recipes).slice((page - 1) * 5, page * 5).forEach(v => url.push(tools.buildTea(v[1].ingredients)));
+		Promise.all(url).then(() => Promise.all(url))
+		.then(async (data) => {
+			const recipesInfos = Object.entries(recipes).map(v => v[1]).slice((page - 1) * 5, page * 5)
+			const store = await tools.buildRecipesStore(data, recipesInfos);
+
+			const embedVerif = new EmbedBuilder()
+				.setColor(0x3B5998)
+				.setTitle(`Entrepôt (Page ${page})`)
+				.setDescription("Recettes disponible")
+				.setImage("attachment://store.png");
+			
+			const comps = [];
+			if(page > 1) comps.push(new ButtonBuilder().setCustomId('recipes-previous').setLabel('Précédant').setStyle(ButtonStyle.Secondary));
+			if(page < Object.keys(recipes).length / 5) comps.push(new ButtonBuilder().setCustomId('recipes-next').setLabel('Suivant').setStyle(ButtonStyle.Secondary));
 			const row = new ActionRowBuilder().addComponents(...comps);
 			res({ success: true, embed: embedVerif, store: store, links: data, row: row, pagination: comps.length > 0 });
 		})
@@ -130,6 +161,7 @@ const data = {
 			data: new SlashCommandBuilder().setName('ingredients').setDescription('Consultation des ingredients en votre possession'),
 			execute: async (client, interaction) => {
 				try {
+					await interaction.deferReply({ ephemeral: true });
 					const result = await buildEmbedIngredientsRecap(interaction.user.id, 1);
 					const message = {
 						content: "",
@@ -143,75 +175,117 @@ const data = {
 					if(!result.pagination) delete message.components;
 
 					await sendToAuthor(client, interaction, message);
+
 					result.links.forEach(v => fs.unlink(v, function() {}))
 					fs.unlink(result.store, function() {});
-					await interaction.reply({ content: 'Vos ingredients vous ont été envoyés en privé', ephemeral: true });
+
+					await interaction.followUp({ content: 'Vos ingredients vous ont été envoyés en privé', ephemeral: true });
 				} catch(e) {
 					if(e.error === 'NO_DRINKER')
 					{
-						await interaction.reply({ content: 'Vous devez tout d\'abord lié votre compte Twitch à Discord grâce à la commande /link <pseudo_twitch>', ephemeral: true });
+						await interaction.followUp({ content: 'Vous devez tout d\'abord lié votre compte Twitch à Discord grâce à la commande /link <pseudo_twitch>', ephemeral: true });
 						return;
 					} else console.log(e);
 				}
 			},
-			click: async (interaction) => {
+			click: async (client, interaction) => {
+				await interaction.deferReply();
 				const page = interaction.message.embeds[0].data.title.match('Page (\\d+)')[1];
+				let newPage = 0;
 				const actionType = interaction.customId.split('-')[1];
 				try {
-					if(actionType === 'previous')
-					{
-						const result = await buildEmbedIngredientsRecap(interaction.user.id, Number.parseInt(page) - 1);
-						const message = {
-							content: "",
-							components: [result.row],
-							embeds: [result.embed],
-							files: [{
-								attachment: result.store,
-								name: 'store.png'
-							}]
-						};
-						if(!result.pagination) delete message.components;
+					if(actionType === 'previous') newPage = Number.parseInt(page) - 1;
+					if(actionType === 'next') newPage = Number.parseInt(page) + 1;
+					const result = await buildEmbedIngredientsRecap(interaction.user.id, newPage);
+					const message = {
+						content: "",
+						components: [result.row],
+						embeds: [result.embed],
+						files: [{
+							attachment: result.store,
+							name: 'store.png'
+						}]
+					};
+					if(!result.pagination) delete message.components;
 
-						await interaction.update(message);
+					await interaction.followUp(message);
 
-						result.links.forEach(v => fs.unlink(v, function() {}))
-						fs.unlink(result.store, function() {});
-					}
-					if(actionType === 'next')
-					{
-						const result = await buildEmbedIngredientsRecap(interaction.user.id, Number.parseInt(page) + 1);
-						const message = {
-							content: "",
-							components: [result.row],
-							embeds: [result.embed],
-							files: [{
-								attachment: result.store,
-								name: 'store.png'
-							}]
-						};
-						if(!result.pagination) delete message.components;
-
-						await interaction.update(message);
-
-						result.links.forEach(v => fs.unlink(v, function() {}))
-						fs.unlink(result.store, function() {});
-					}
+					result.links.forEach(v => fs.unlink(v, function() {}))
+					fs.unlink(result.store, function() {});
 				} catch(e) {
 					if(e.error === 'NO_DRINKER')
 					{
-						await interaction.reply({ content: 'Vous devez tout d\'abord lié votre compte Twitch à Discord grâce à la commande /link <pseudo_twitch>', ephemeral: true });
+						await interaction.followUp({ content: 'Vous devez tout d\'abord lié votre compte Twitch à Discord grâce à la commande /link <pseudo_twitch>', ephemeral: true });
 						return;
 					} else console.log(e);
 				}
 			}
 		},
-		// // View recipes
-		// {
-		// 	data: new SlashCommandBuilder().setName('recipes').setDescription('Consultation des recettes disponible'),
-		// 	execute: async (client, interaction) => {
-		// 		await interaction.reply({ content: 'Vos ingredients vous ont été envoyés en privé', ephemeral: true });
-		// 	},
-		// },
+		// View recipes
+		{
+			data: new SlashCommandBuilder().setName('recipes').setDescription('Consultation des recettes disponible'),
+			execute: async (client, interaction) => {
+				try {
+					await interaction.deferReply({ ephemeral: true });
+					const result = await buildEmbedRecipeRecap(interaction.user.id, 1);
+					const message = {
+						content: "",
+						components: [result.row],
+						embeds: [result.embed],
+						files: [{
+							attachment: result.store,
+							name: 'store.png'
+						}]
+					};
+					if(!result.pagination) delete message.components;
+
+					await sendToAuthor(client, interaction, message);
+
+					result.links.forEach(v => fs.unlink(v, function() {}))
+					fs.unlink(result.store, function() {});
+
+					await interaction.followUp({ content: 'Les recettes vous ont été envoyés en privé', ephemeral: true });
+				} catch(e) {
+					if(e.error === 'NO_DRINKER')
+					{
+						await interaction.followUp({ content: 'Vous devez tout d\'abord lié votre compte Twitch à Discord grâce à la commande /link <pseudo_twitch>', ephemeral: true });
+						return;
+					} else console.log(e);
+				}
+			},
+			click: async (client, interaction) => {
+				await interaction.deferReply();
+				const page = interaction.message.embeds[0].data.title.match('Page (\\d+)')[1];
+				let newPage = 0;
+				const actionType = interaction.customId.split('-')[1];
+				try {
+					if(actionType === 'previous') newPage = Number.parseInt(page) - 1;
+					if(actionType === 'next') newPage = Number.parseInt(page) + 1;
+					const result = await buildEmbedRecipeRecap(interaction.user.id, newPage);
+					const message = {
+						content: "",
+						components: [result.row],
+						embeds: [result.embed],
+						files: [{
+							attachment: result.store,
+							name: 'store.png'
+						}]
+					};
+					if(!result.pagination) delete message.components;
+
+					await interaction.followUp(message);
+
+					result.links.forEach(v => fs.unlink(v, function() {}))
+					fs.unlink(result.store, function() {});
+				} catch(e) {
+					if(e.error === 'NO_DRINKER')
+					{
+						await interaction.followUp({ content: 'Vous devez tout d\'abord lié votre compte Twitch à Discord grâce à la commande /link <pseudo_twitch>', ephemeral: true });
+						return;
+					} else console.log(e);
+				}
+			}
+		},
 		// // Infuse
 		// {
 		// 	data: new SlashCommandBuilder().setName('infusion').setDescription('Infusion d\'un thé avec vos ingredients'),

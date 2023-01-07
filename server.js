@@ -342,7 +342,7 @@ const buttonsHandler = async (interaction) => {
 	}
 
 	try {
-		await command[0].click(interaction);
+		await command[0].click(client, interaction);
 	} catch (error) {
 		console.error(`Error executing ${interaction.customId}`);
 		console.error(error);
