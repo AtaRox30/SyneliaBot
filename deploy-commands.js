@@ -286,13 +286,53 @@ const data = {
 				}
 			}
 		},
-		// // Infuse
-		// {
-		// 	data: new SlashCommandBuilder().setName('infusion').setDescription('Infusion d\'un thé avec vos ingredients'),
-		// 	execute: async (client, interaction) => {
-		// 		await interaction.reply({ content: 'La commande est en travaux !', ephemeral: true });
-		// 	},
-		// },
+		// Infuse
+		{
+			data: new SlashCommandBuilder().setName('infusion').setDescription('Infusion d\'un thé avec vos ingredients')
+				.addStringOption(option => option.setName('infusion-recipe').setDescription('Nom de la recette à infuser').setRequired(true).setAutocomplete(true)),
+			execute: async (client, interaction) => {
+				const recipeKey = interaction.options.get('infusion-recipe').value;
+				const user = await mongo.addRecipe(interaction.user.id, recipeKey, tools.getXP(recipes[recipeKey].ingredients));
+				await mongo.retreiveIngredients(interaction.user.id, recipes[recipeKey].ingredients);
+
+				const embed = new EmbedBuilder()
+					.setColor(0x3B5998)
+					.setTitle(recipes[recipeKey].name)
+					.setDescription("Le temps d'infusion est de 5 minutes")
+					.setThumbnail("attachment://theiere.gif");
+
+				const message = {
+					content: "",
+					embeds: [embed],
+					files: [{
+						attachment: "./assets/theiere-anim.gif",
+						name: 'theiere.gif'
+					}],
+					ephemeral: true
+				};
+
+				if(user.modifiedCount === 0) {
+					message.content = "Vous devez tout d\'abord lié votre compte Twitch à Discord grâce à la commande /link <pseudo_twitch>";
+					delete message.embeds;
+					delete message.files;
+				}
+				
+				await interaction.reply(message);
+			},
+			autocomplete: async (client, interaction) => {
+				const focusedValue = interaction.options.getFocused();
+				const drinker = await mongo.getDrinkerProfile({ "discordId" : interaction.user.id });
+				const formatted_ingr = {};
+				drinker.ingredients.forEach(v => formatted_ingr[v.code] = v.amount);
+				const available = tools.getAvailableRecipes(formatted_ingr);
+				const choices = available.map(v => ({
+					value: v[0],
+					name: `${v[1].name} - ${tools.getXP(recipes[v[0]].ingredients)} XP`
+				}));
+				const filtered = choices.filter(choice => choice.value.includes(focusedValue));
+				await interaction.respond(filtered);
+			},
+		},
 		// Set up stream alert
 		{
 			data: new SlashCommandBuilder().setName('setup-stream').setDescription('Paramètrage des alertes de live'),
@@ -435,7 +475,23 @@ const data = {
 					ephemeral: true
 				});
 			}
-		}
+		},
+		// Cheat
+		{
+			data: new SlashCommandBuilder().setName('cheat').setDescription('Cheat du developpeur ;)')
+				.addBooleanOption(option => option.setName('cheat-ingredient').setDescription('Give 10 exemplaires de chaque ingredient').setRequired(true)),
+			execute: async (client, interaction) => {
+				if(interaction.user.id !== "236174876933619713")
+				{
+					return await interaction.reply({ content: 'N\'essaie pas de tricher, c\'est reservé à certaines personnes seulement ;)', ephemeral: true });
+				}
+				const ingredient = interaction.options.get('cheat-ingredient').value;
+				if(ingredient) {
+					await mongo.setAll10Ingredients();
+					await interaction.reply({ content: '10 ingredients de chaque type vous ont été donnés', ephemeral: true });
+				}
+			}
+		},
 	]
 };
 

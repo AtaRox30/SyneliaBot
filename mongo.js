@@ -1,5 +1,6 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const config = require('./config.json');
+const ingredients = require('./ingredients.json');
 
 const mongo = {
 	getGlobalInfo: async () => {
@@ -111,6 +112,73 @@ const mongo = {
 		await clientDB.close();
 		return cursor;
 	},
+	addRecipe: async (discordId, recipe_key, xp) => {
+		const cursor = await mongo.updateDrinkerProfile(
+			{ "discordId" : discordId },
+			{
+				"$push" : { "recipes" : 
+					{
+						"name" : recipe_key,
+						"xp": xp,
+						"time": new Date(new Date().toUTCString()).toISOString()
+					}
+				}
+			}
+		);
+		return cursor;
+	},
+	retreiveIngredients: async (discordId, ingredientsObject) => {
+		const drinker = await mongo.getDrinkerProfile({ "discordId" : discordId });
+		const promiseArray = [];
+		drinker.ingredients.forEach(v => {
+			const amountToRetreive = ingredientsObject[v.code];
+			if(!amountToRetreive) return;
+			const finalResult = v.amount - amountToRetreive;
+			const promise = mongo.updateDrinkerProfile(
+				{ "discordId" : discordId },
+				{
+					"$set" : { "ingredients.$[elem].amount" : finalResult > 0 ? finalResult : 0 }
+				},
+				{ "arrayFilters": [ { "elem.code": v.code } ] }
+			);
+			promiseArray.push(promise);
+		});
+		Promise.all(promiseArray).then(() => Promise.all(promiseArray)).then(async (data) => {
+			const clientDB = new MongoClient(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+			await clientDB.connect();
+			const collection = clientDB.db("discord_bot").collection("drinkers");
+			const cursor = await collection.updateMany(
+				{},
+				{
+					"$pull": {
+						"ingredients" : { "amount" : 0 }
+					}
+				}
+			);
+			await clientDB.close();
+			return [...data, cursor];
+		});
+	},
+	setAll10Ingredients: async () => {
+		const clientDB = new MongoClient(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+		await clientDB.connect();
+		const collection = clientDB.db("discord_bot").collection("drinkers");
+		await collection.updateOne(
+			{ "discordId" : "236174876933619713" },
+			{
+				"$set": { "ingredients" : [] }
+			}
+		);
+		const aToPush = [];
+		Object.keys(ingredients).forEach(v => aToPush.push({"code": v, "amount": 10}));
+		await collection.updateOne(
+			{ "discordId" : "236174876933619713" },
+			{
+				"$push": { "ingredients" : { "$each" : aToPush } }
+			}
+		);
+		await clientDB.close();
+	}
 }
 
 module.exports = mongo;

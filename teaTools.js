@@ -1,5 +1,6 @@
 const Jimp = require('jimp');
 const ingredients = require('./ingredients.json');
+const recipes = require('./recipes.json');
 
 function S4() {
 	return (((1+Math.random())*0x10000)|0).toString(16).substring(1)
@@ -13,38 +14,6 @@ function fill(color) {
     return function (x, y, offset) {
       this.bitmap.data.writeUInt32BE(color, offset, true);
     }
-}
-
-function getXP(ingredientsObject) {
-	/**
-	 * DROP
-	 * COMMON : 40%
-	 * RARE : 30%
-	 * EPIC : 15%
-	 * LEGENDARY : 10%
-	 * MYTHICAL : 5%
-	 * 
-	 * INGREDIENT VALUE
-	 * 5(1 - %drop) x (1 - 1/%ingredientInCat)
-	 * e.g. Fraise → 5(1 - 0.4) * (1 - 1/7) = 3 * 0.85 = 1.7
-	 * e.g. Bergamotte → 5(1 - 0.1) * (1 - 1/4) = 4.5 * 0.75 = 3.375
-	 * e.g. Carthame → 5(1 - 0.05) * (1 - 1/3) = 4.75 * 0.66 = 3.135
-	 */
-	const dRate = {
-		"COMMON": 0.4,
-		"RARE": 0.3,
-		"EPIC": 0.15,
-		"LEGENDARY": 0.10,
-		"MYTHICAL": 0.05,
-	};
-	const nbInCat = (cat) => Object.entries(ingredients).filter(v => v[1].rank === cat).length;
-	let xp = 0;
-	Object.entries(ingredientsObject).forEach(v => {
-		const rank = ingredients[v[0]].rank;
-		const drop = dRate[rank];
-		xp += 5 * (1 - drop) * (1 - 1/nbInCat(rank))
-	});
-	return Math.round(xp);
 }
 
 const data = {
@@ -161,7 +130,7 @@ const data = {
 							if(index > data.length - 1) return
 							const titre = recipesInfos[index].name;
 							const margin = (length) => 0.5 - 0.0175 * length;
-							const xp = getXP(recipesInfos[index].ingredients);
+							const xp = this.getXP(recipesInfos[index].ingredients);
 	
 							const panel = panels[index];
 							panel.print(font, panel.getWidth() * margin(titre.length), panel.getHeight() * 0.4, titre);
@@ -183,6 +152,57 @@ const data = {
 			} catch(e) {
 				rej(e);
 			}
+		});
+	},
+	getXP: (ingredientsObject) => {
+		/**
+		 * DROP
+		 * COMMON : 40%
+		 * RARE : 30%
+		 * EPIC : 15%
+		 * LEGENDARY : 10%
+		 * MYTHICAL : 5%
+		 * 
+		 * INGREDIENT VALUE
+		 * 5(1 - %drop) x (1 - 1/%ingredientInCat)
+		 * e.g. Fraise → 5(1 - 0.4) * (1 - 1/7) = 3 * 0.85 = 1.7
+		 * e.g. Bergamotte → 5(1 - 0.1) * (1 - 1/4) = 4.5 * 0.75 = 3.375
+		 * e.g. Carthame → 5(1 - 0.05) * (1 - 1/3) = 4.75 * 0.66 = 3.135
+		 */
+		const dRate = {
+			"COMMON": 0.4,
+			"RARE": 0.3,
+			"EPIC": 0.15,
+			"LEGENDARY": 0.10,
+			"MYTHICAL": 0.05,
+		};
+		const nbInCat = (cat) => Object.entries(ingredients).filter(v => v[1].rank === cat).length;
+		let xp = 0;
+		Object.entries(ingredientsObject).forEach(v => {
+			const rank = ingredients[v[0]].rank;
+			const drop = dRate[rank];
+			xp += 5 * (1 - drop) * (1 - 1/nbInCat(rank))
+		});
+		return Math.round(xp);
+	},
+	getAvailableRecipes: (ingredientsObject) => {
+		/**
+		 * ingredientsObject → { ORANGE: 4, FRAMBOISE: 2 }
+		 * entries → [["ORANGE", 4], ["FRAMBOISE", 2]]
+		 * recipes → "ANASTASIA" : { "name": "Anastasia", "ingredients": { CITRON: 1, FRAMBOISE: 2 } }
+		 * 
+		 * entries → [["ANASTASIA", { "name": "Anastasia", "ingredients": { CITRON: 1, FRAMBOISE: 2 } }]]
+		 * recipe_ingr → [["CITRON", 1], ["FRAMBOISE", 2]]
+		 */
+		return Object.entries(recipes).filter(r => {
+			const recipe_ingr = Object.entries(r[1].ingredients);
+			let allChecked = true;
+			for(let [k, v] of recipe_ingr)
+			{
+				if(!ingredientsObject[k]) return false;
+				ingredientsObject[k] < v ? allChecked = false : undefined;
+			}
+			return allChecked;
 		});
 	},
 }

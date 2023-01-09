@@ -349,6 +349,22 @@ const buttonsHandler = async (interaction) => {
 	}
 }
 
+const autocompletesHandler = async (interaction) => {
+	const command = commands.filter(v => v.data.name === interaction.commandName);
+
+	if (!command.length) {
+		console.error(`No autocomplete matching ${interaction.customId} was found.`);
+		return;
+	}
+
+	try {
+		await command[0].autocomplete(client, interaction);
+	} catch (error) {
+		console.error(`Error executing ${interaction.customId}`);
+		console.error(error);
+	}
+}
+
 client.on("ready", async () => {
 	if(process.env.PROFILE === "dev")
 	{
@@ -370,6 +386,7 @@ client.on(Events.InteractionCreate, async interaction => {
 	if(interaction.isChatInputCommand()) return commandsHandler(interaction);
 	if(interaction.isModalSubmit()) return modalSubmitHandler(interaction);
 	if(interaction.isButton()) return buttonsHandler(interaction);
+	if(interaction.isAutocomplete()) return autocompletesHandler(interaction);
 });
 
 client.login(process.env.DISCORD_BOT_TOKEN);
