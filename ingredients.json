@@ -251,9 +251,9 @@
 		"rank": "EPIC",
 		"url": {
 			"main": "./assets/ingredients/menthe.png",
-			"basket_1": "./assets/baskets/rose_1.png",
-			"basket_2": "./assets/baskets/rose_2.png",
-			"basket_3": "./assets/baskets/rose_3.png"
+			"basket_1": "./assets/baskets/menthe_1.png",
+			"basket_2": "./assets/baskets/menthe_2.png",
+			"basket_3": "./assets/baskets/menthe_3.png"
 		},
 		"descriptions": [
 			"Aucune description"
@@ -303,9 +303,9 @@
 		"rank": "MYTHICAL",
 		"url": {
 			"main": "./assets/ingredients/sakura.png",
-			"basket_1": "./assets/baskets/rose_1.png",
-			"basket_2": "./assets/baskets/rose_2.png",
-			"basket_3": "./assets/baskets/rose_3.png"
+			"basket_1": "./assets/baskets/sakura_1.png",
+			"basket_2": "./assets/baskets/sakura_2.png",
+			"basket_3": "./assets/baskets/sakura_3.png"
 		},
 		"descriptions": [
 			"Aucune description"

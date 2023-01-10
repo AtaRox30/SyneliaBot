@@ -292,32 +292,38 @@ const data = {
 				.addStringOption(option => option.setName('infusion-recipe').setDescription('Nom de la recette à infuser').setRequired(true).setAutocomplete(true)),
 			execute: async (client, interaction) => {
 				const recipeKey = interaction.options.get('infusion-recipe').value;
-				const user = await mongo.addRecipe(interaction.user.id, recipeKey, tools.getXP(recipes[recipeKey].ingredients));
-				await mongo.retreiveIngredients(interaction.user.id, recipes[recipeKey].ingredients);
+				if(Object.keys(recipes).includes(recipeKey))
+				{
+					const user = await mongo.addRecipe(interaction.user.id, recipeKey, tools.getXP(recipes[recipeKey].ingredients));
+					await mongo.retreiveIngredients(interaction.user.id, recipes[recipeKey].ingredients);
 
-				const embed = new EmbedBuilder()
-					.setColor(0x3B5998)
-					.setTitle(recipes[recipeKey].name)
-					.setDescription("Le temps d'infusion est de 5 minutes")
-					.setThumbnail("attachment://theiere.gif");
+					const embed = new EmbedBuilder()
+						.setColor(0x3B5998)
+						.setTitle(recipes[recipeKey].name)
+						.setDescription("Le temps d'infusion est de 5 minutes")
+						.setThumbnail("attachment://theiere.gif");
 
-				const message = {
-					content: "",
-					embeds: [embed],
-					files: [{
-						attachment: "./assets/theiere-anim.gif",
-						name: 'theiere.gif'
-					}],
-					ephemeral: true
-				};
+					const message = {
+						content: "",
+						embeds: [embed],
+						files: [{
+							attachment: "./assets/theiere-anim.gif",
+							name: 'theiere.gif'
+						}],
+						ephemeral: true
+					};
 
-				if(user.modifiedCount === 0) {
-					message.content = "Vous devez tout d\'abord lié votre compte Twitch à Discord grâce à la commande /link <pseudo_twitch>";
-					delete message.embeds;
-					delete message.files;
+					if(user.modifiedCount === 0) {
+						message.content = "Vous devez tout d\'abord lié votre compte Twitch à Discord grâce à la commande /link <pseudo_twitch>";
+						delete message.embeds;
+						delete message.files;
+					}
+
+					await interaction.reply(message);
+				} else {
+					await interaction.reply({ content: "Ce thé n'existe pas !", ephemeral: true });
 				}
 				
-				await interaction.reply(message);
 			},
 			autocomplete: async (client, interaction) => {
 				const focusedValue = interaction.options.getFocused();
