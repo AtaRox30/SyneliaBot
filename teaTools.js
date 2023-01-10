@@ -17,6 +17,37 @@ function fill(color) {
 }
 
 const data = {
+	getXP: (ingredientsObject) => {
+		/**
+		 * DROP
+		 * COMMON : 40%
+		 * RARE : 30%
+		 * EPIC : 15%
+		 * LEGENDARY : 10%
+		 * MYTHICAL : 5%
+		 * 
+		 * INGREDIENT VALUE
+		 * 5(1 - %drop) x (1 - 1/%ingredientInCat)
+		 * e.g. Fraise → 5(1 - 0.4) * (1 - 1/7) = 3 * 0.85 = 1.7
+		 * e.g. Bergamotte → 5(1 - 0.1) * (1 - 1/4) = 4.5 * 0.75 = 3.375
+		 * e.g. Carthame → 5(1 - 0.05) * (1 - 1/3) = 4.75 * 0.66 = 3.135
+		 */
+		const dRate = {
+			"COMMON": 0.4,
+			"RARE": 0.3,
+			"EPIC": 0.15,
+			"LEGENDARY": 0.10,
+			"MYTHICAL": 0.05,
+		};
+		const nbInCat = (cat) => Object.entries(ingredients).filter(v => v[1].rank === cat).length;
+		let xp = 0;
+		Object.entries(ingredientsObject).forEach(v => {
+			const rank = ingredients[v[0]].rank;
+			const drop = dRate[rank];
+			xp += 5 * (1 - drop) * (1 - 1/nbInCat(rank))
+		});
+		return Math.round(xp);
+	},
 	buildBasket: async (ingredient_key, count) => {
 		return new Promise(async (res, rej) => {
 			try {
@@ -153,37 +184,6 @@ const data = {
 				rej(e);
 			}
 		});
-	},
-	getXP: (ingredientsObject) => {
-		/**
-		 * DROP
-		 * COMMON : 40%
-		 * RARE : 30%
-		 * EPIC : 15%
-		 * LEGENDARY : 10%
-		 * MYTHICAL : 5%
-		 * 
-		 * INGREDIENT VALUE
-		 * 5(1 - %drop) x (1 - 1/%ingredientInCat)
-		 * e.g. Fraise → 5(1 - 0.4) * (1 - 1/7) = 3 * 0.85 = 1.7
-		 * e.g. Bergamotte → 5(1 - 0.1) * (1 - 1/4) = 4.5 * 0.75 = 3.375
-		 * e.g. Carthame → 5(1 - 0.05) * (1 - 1/3) = 4.75 * 0.66 = 3.135
-		 */
-		const dRate = {
-			"COMMON": 0.4,
-			"RARE": 0.3,
-			"EPIC": 0.15,
-			"LEGENDARY": 0.10,
-			"MYTHICAL": 0.05,
-		};
-		const nbInCat = (cat) => Object.entries(ingredients).filter(v => v[1].rank === cat).length;
-		let xp = 0;
-		Object.entries(ingredientsObject).forEach(v => {
-			const rank = ingredients[v[0]].rank;
-			const drop = dRate[rank];
-			xp += 5 * (1 - drop) * (1 - 1/nbInCat(rank))
-		});
-		return Math.round(xp);
 	},
 	getAvailableRecipes: (ingredientsObject) => {
 		/**
