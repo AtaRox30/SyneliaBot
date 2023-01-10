@@ -109,7 +109,7 @@ const tea = {
 				];
 				const posToApply = pos.filter(v => v.g.includes(aIngredients.length));
 				const assembled = [];
-				aIngredients.forEach(v => assembled.push(Jimp.read(ingredients[v].url.main)));
+				aIngredients.forEach(v => assembled.push(Jimp.read(ingredients[v].url.main.filter(v => Math.random() < v.probability)[0].url)));
 				Promise.all(assembled).then(() => Promise.all(assembled))
 				.then(async (data) => {
 					data.flatMap((img, index) => {

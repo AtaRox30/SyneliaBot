@@ -3,7 +3,10 @@
 		"name": "Fraise",
 		"rank": "COMMON",
 		"url": {
-			"main": "./assets/ingredients/fraise.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/fraise.png"
+			}],
 			"basket_1": "./assets/baskets/fraise_1.png",
 			"basket_2": "./assets/baskets/fraise_2.png",
 			"basket_3": "./assets/baskets/fraise_3.png"
@@ -16,7 +19,10 @@
 		"name": "Caramel",
 		"rank": "COMMON",
 		"url": {
-			"main": "./assets/ingredients/caramel.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/caramel.png"
+			}],
 			"basket_1": "./assets/baskets/caramel_1.png",
 			"basket_2": "./assets/baskets/caramel_2.png",
 			"basket_3": "./assets/baskets/caramel_3.png"
@@ -29,7 +35,10 @@
 		"name": "Pomme",
 		"rank": "COMMON",
 		"url": {
-			"main": "./assets/ingredients/pomme.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/pomme.png"
+			}],
 			"basket_1": "./assets/baskets/pomme_1.png",
 			"basket_2": "./assets/baskets/pomme_2.png",
 			"basket_3": "./assets/baskets/pomme_3.png"
@@ -42,7 +51,10 @@
 		"name": "Cerise",
 		"rank": "COMMON",
 		"url": {
-			"main": "./assets/ingredients/cerise.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/cerise.png"
+			}],
 			"basket_1": "./assets/baskets/cerise_1.png",
 			"basket_2": "./assets/baskets/cerise_2.png",
 			"basket_3": "./assets/baskets/cerise_3.png"
@@ -55,7 +67,10 @@
 		"name": "Framboise",
 		"rank": "COMMON",
 		"url": {
-			"main": "./assets/ingredients/framboise.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/framboise.png"
+			}],
 			"basket_1": "./assets/baskets/framboise_1.png",
 			"basket_2": "./assets/baskets/framboise_2.png",
 			"basket_3": "./assets/baskets/framboise_3.png"
@@ -68,7 +83,16 @@
 		"name": "Citron",
 		"rank": "COMMON",
 		"url": {
-			"main": "./assets/ingredients/citron.png",
+			"main": [
+				{
+					"probability": 0.95,
+					"url": "./assets/ingredients/citron.png"
+				},
+				{
+					"probability": 1,
+					"url": "./assets/ingredients/citron_uwu.png"
+				}
+			],
 			"basket_1": "./assets/baskets/citron_1.png",
 			"basket_2": "./assets/baskets/citron_2.png",
 			"basket_3": "./assets/baskets/citron_3.png"
@@ -81,7 +105,10 @@
 		"name": "Orange",
 		"rank": "COMMON",
 		"url": {
-			"main": "./assets/ingredients/orange.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/orange.png"
+			}],
 			"basket_1": "./assets/baskets/orange_1.png",
 			"basket_2": "./assets/baskets/orange_2.png",
 			"basket_3": "./assets/baskets/orange_3.png"
@@ -94,7 +121,10 @@
 		"name": "Groseille",
 		"rank": "RARE",
 		"url": {
-			"main": "./assets/ingredients/groseille.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/groseille.png"
+			}],
 			"basket_1": "./assets/baskets/groseille_1.png",
 			"basket_2": "./assets/baskets/groseille_2.png",
 			"basket_3": "./assets/baskets/groseille_3.png"
@@ -107,7 +137,10 @@
 		"name": "Amande",
 		"rank": "RARE",
 		"url": {
-			"main": "./assets/ingredients/amande.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/amande.png"
+			}],
 			"basket_1": "./assets/baskets/amande_1.png",
 			"basket_2": "./assets/baskets/amande_2.png",
 			"basket_3": "./assets/baskets/amande_3.png"
@@ -120,7 +153,10 @@
 		"name": "Pêche",
 		"rank": "RARE",
 		"url": {
-			"main": "./assets/ingredients/peche.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/peche.png"
+			}],
 			"basket_1": "./assets/baskets/peche_1.png",
 			"basket_2": "./assets/baskets/peche_2.png",
 			"basket_3": "./assets/baskets/peche_3.png"
@@ -133,7 +169,10 @@
 		"name": "Cannelle",
 		"rank": "RARE",
 		"url": {
-			"main": "./assets/ingredients/cannelle.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/cannelle.png"
+			}],
 			"basket_1": "./assets/baskets/cannelle_1.png",
 			"basket_2": "./assets/baskets/cannelle_2.png",
 			"basket_3": "./assets/baskets/cannelle_3.png"
@@ -146,7 +185,10 @@
 		"name": "Vanille",
 		"rank": "EPIC",
 		"url": {
-			"main": "./assets/ingredients/vanille.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/vanille.png"
+			}],
 			"basket_1": "./assets/baskets/vanille_1.png",
 			"basket_2": "./assets/baskets/vanille_2.png",
 			"basket_3": "./assets/baskets/vanille_3.png"
@@ -159,7 +201,10 @@
 		"name": "Fleur d'oranger",
 		"rank": "EPIC",
 		"url": {
-			"main": "./assets/ingredients/fleur_oranger.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/fleur_oranger.png"
+			}],
 			"basket_1": "./assets/baskets/fleur_oranger_1.png",
 			"basket_2": "./assets/baskets/fleur_oranger_2.png",
 			"basket_3": "./assets/baskets/fleur_oranger_3.png"
@@ -172,7 +217,10 @@
 		"name": "Violette",
 		"rank": "LEGENDARY",
 		"url": {
-			"main": "./assets/ingredients/violette.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/violette.png"
+			}],
 			"basket_1": "./assets/baskets/violette_1.png",
 			"basket_2": "./assets/baskets/violette_2.png",
 			"basket_3": "./assets/baskets/violette_3.png"
@@ -185,7 +233,10 @@
 		"name": "Bergamote",
 		"rank": "LEGENDARY",
 		"url": {
-			"main": "./assets/ingredients/bergamotte.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/bergamotte.png"
+			}],
 			"basket_1": "./assets/baskets/bergamotte_1.png",
 			"basket_2": "./assets/baskets/bergamotte_2.png",
 			"basket_3": "./assets/baskets/bergamotte_3.png"
@@ -198,7 +249,10 @@
 		"name": "Bleuet",
 		"rank": "LEGENDARY",
 		"url": {
-			"main": "./assets/ingredients/bleuet.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/bleuet.png"
+			}],
 			"basket_1": "./assets/baskets/bleuet_1.png",
 			"basket_2": "./assets/baskets/bleuet_2.png",
 			"basket_3": "./assets/baskets/bleuet_3.png"
@@ -211,7 +265,10 @@
 		"name": "Ananas",
 		"rank": "RARE",
 		"url": {
-			"main": "./assets/ingredients/ananas.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/ananas.png"
+			}],
 			"basket_1": "./assets/baskets/ananas_1.png",
 			"basket_2": "./assets/baskets/ananas_2.png",
 			"basket_3": "./assets/baskets/ananas_3.png"
@@ -224,7 +281,10 @@
 		"name": "Carthame",
 		"rank": "MYTHICAL",
 		"url": {
-			"main": "./assets/ingredients/carthame.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/carthame.png"
+			}],
 			"basket_1": "./assets/baskets/carthame_1.png",
 			"basket_2": "./assets/baskets/carthame_2.png",
 			"basket_3": "./assets/baskets/carthame_3.png"
@@ -237,7 +297,10 @@
 		"name": "Jasmin",
 		"rank": "LEGENDARY",
 		"url": {
-			"main": "./assets/ingredients/jasmin.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/jasmin.png"
+			}],
 			"basket_1": "./assets/baskets/jasmin_1.png",
 			"basket_2": "./assets/baskets/jasmin_2.png",
 			"basket_3": "./assets/baskets/jasmin_3.png"
@@ -250,7 +313,10 @@
 		"name": "Menthe",
 		"rank": "EPIC",
 		"url": {
-			"main": "./assets/ingredients/menthe.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/menthe.png"
+			}],
 			"basket_1": "./assets/baskets/menthe_1.png",
 			"basket_2": "./assets/baskets/menthe_2.png",
 			"basket_3": "./assets/baskets/menthe_3.png"
@@ -263,7 +329,10 @@
 		"name": "Noix de coco",
 		"rank": "EPIC",
 		"url": {
-			"main": "./assets/ingredients/noix_de_coco.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/noix_de_coco.png"
+			}],
 			"basket_1": "./assets/baskets/coco_1.png",
 			"basket_2": "./assets/baskets/coco_2.png",
 			"basket_3": "./assets/baskets/coco_3.png"
@@ -276,7 +345,10 @@
 		"name": "Rose",
 		"rank": "EPIC",
 		"url": {
-			"main": "./assets/ingredients/rose.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/rose.png"
+			}],
 			"basket_1": "./assets/baskets/rose_1.png",
 			"basket_2": "./assets/baskets/rose_2.png",
 			"basket_3": "./assets/baskets/rose_3.png"
@@ -289,7 +361,10 @@
 		"name": "Rhubarbe",
 		"rank": "LEGENDARY",
 		"url": {
-			"main": "./assets/ingredients/rhubarbe.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/rhubarbe.png"
+			}],
 			"basket_1": "./assets/baskets/rhubarbe_1.png",
 			"basket_2": "./assets/baskets/rhubarbe_2.png",
 			"basket_3": "./assets/baskets/rhubarbe_3.png"
@@ -302,7 +377,10 @@
 		"name": "Sakura",
 		"rank": "MYTHICAL",
 		"url": {
-			"main": "./assets/ingredients/sakura.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/sakura.png"
+			}],
 			"basket_1": "./assets/baskets/sakura_1.png",
 			"basket_2": "./assets/baskets/sakura_2.png",
 			"basket_3": "./assets/baskets/sakura_3.png"
@@ -315,7 +393,10 @@
 		"name": "Soucis",
 		"rank": "MYTHICAL",
 		"url": {
-			"main": "./assets/ingredients/soucis.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/soucis.png"
+			}],
 			"basket_1": "./assets/baskets/soucis_1.png",
 			"basket_2": "./assets/baskets/soucis_2.png",
 			"basket_3": "./assets/baskets/soucis_3.png"
@@ -328,7 +409,10 @@
 		"name": "Épices",
 		"rank": "EPIC",
 		"url": {
-			"main": "./assets/ingredients/epices.png",
+			"main": [{
+				"probability": 1,
+				"url": "./assets/ingredients/epices.png"
+			}],
 			"basket_1": "./assets/baskets/epices_1.png",
 			"basket_2": "./assets/baskets/epices_2.png",
 			"basket_3": "./assets/baskets/epices_3.png"

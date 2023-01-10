@@ -209,5 +209,11 @@
 			"BLEUET": 1,
 			"CITRON": 1
 		}
+	},
+	"MENTHE": {
+		"name": "Menthe",
+		"ingredients": {
+			"MENTHE": 4
+		}
 	}
 }

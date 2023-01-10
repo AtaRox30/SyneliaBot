@@ -275,7 +275,7 @@ const notifyIngredientGot = (aToNotify) => {
 			content: `<@${drinkerProfile.discordId}>`,
 			embeds: [exampleEmbed],
 			files: [{
-				attachment: ingredients[drinker.ingredient].url.main,
+				attachment: ingredients[drinker.ingredient].url.main.filter(v => Math.random() < v.probability)[0].url,
         		name: 'ingredient.png'
 			}]
 		});
