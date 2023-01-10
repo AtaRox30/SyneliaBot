@@ -130,7 +130,7 @@ const data = {
 							if(index > data.length - 1) return
 							const titre = recipesInfos[index].name;
 							const margin = (length) => 0.5 - 0.0175 * length;
-							const xp = this.getXP(recipesInfos[index].ingredients);
+							const xp = data.getXP(recipesInfos[index].ingredients);
 	
 							const panel = panels[index];
 							panel.print(font, panel.getWidth() * margin(titre.length), panel.getHeight() * 0.4, titre);
