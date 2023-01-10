@@ -335,7 +335,7 @@ const data = {
 					value: v[0],
 					name: `${v[1].name} - ${tools.getXP(recipes[v[0]].ingredients)} XP`
 				}));
-				const filtered = choices.filter(choice => choice.value.includes(focusedValue));
+				const filtered = choices.filter(choice => choice.value.toLowerCase().includes(focusedValue.toLowerCase()));
 				await interaction.respond(filtered);
 			},
 		},
