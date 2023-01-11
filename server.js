@@ -97,8 +97,8 @@ const distributeIngredient = async (worthDrinkers) => {
 			await mongo.insertIngredientProfile({ "twitchId" : v.twitchId }, ingredient);
 			haveAmount = false;
 		}
-		mongo.resetPointFromDrinker({ "twitchId" : v.twitchId });
-		mongo.incrementAmount(v.twitchId, ingredient, (haveAmount ? currentIngredientStat[0].amount : 0));
+		await mongo.resetPointFromDrinker({ "twitchId" : v.twitchId });
+		await mongo.incrementAmount(v.twitchId, ingredient, (haveAmount ? currentIngredientStat[0].amount : 0));
 		notifier.push({ "twitchId": v.twitchId, "ingredient": ingredient });
 	});
 	return notifier;
@@ -256,8 +256,9 @@ const notifyIngredientGot = (aToNotify) => {
 	];
 	aToNotify.forEach(async drinker => {
 		const drinkerProfile = await mongo.getDrinkerProfile({ "twitchId" : drinker.twitchId });
-		const descriptions = ingredients[drinker.ingredient].descriptions;
-		const randomDescription = descriptions[Math.floor(Math.random() * descriptions.length)];
+		const currentAmount = drinkerProfile.ingredients.filter(i => i.code === drinker.ingredient);
+		const ingrName = ingredients[drinker.ingredient].name;
+		const description = currentAmount.length === 0 ? `Vous récolté votre premier(ère) ${ingrName} !` : `Vous récolté votre ${currentAmount[0].amount}ème ${ingrName} !`;
 
 		const guild = client.guilds.cache.get(config["DISCORD"][process.env.PROFILE.toUpperCase()]["GUILD_ID"]);
 		const member = await guild.members.fetch(drinkerProfile.discordId);
@@ -268,7 +269,7 @@ const notifyIngredientGot = (aToNotify) => {
 			.setTitle("Vous avez récolté : " + ingredients[drinker.ingredient].name)
 			.setAuthor({ name: member.user.username, iconURL: member.user.avatarURL() })
 			.setThumbnail("attachment://ingredient.png")
-			.setDescription(randomDescription)
+			.setDescription(description)
 			.setTimestamp()
 
 		await channelDisc.send({

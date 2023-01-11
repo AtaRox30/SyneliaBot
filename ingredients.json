@@ -10,10 +10,7 @@
 			"basket_1": "./assets/baskets/fraise_1.png",
 			"basket_2": "./assets/baskets/fraise_2.png",
 			"basket_3": "./assets/baskets/fraise_3.png"
-		},
-		"descriptions": [
-			"*Parfum d'été*"
-		]
+		}
 	},
 	"CARAMEL": {
 		"name": "Caramel",
@@ -26,10 +23,7 @@
 			"basket_1": "./assets/baskets/caramel_1.png",
 			"basket_2": "./assets/baskets/caramel_2.png",
 			"basket_3": "./assets/baskets/caramel_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"POMME": {
 		"name": "Pomme",
@@ -42,10 +36,7 @@
 			"basket_1": "./assets/baskets/pomme_1.png",
 			"basket_2": "./assets/baskets/pomme_2.png",
 			"basket_3": "./assets/baskets/pomme_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"CERISE": {
 		"name": "Cerise",
@@ -58,10 +49,7 @@
 			"basket_1": "./assets/baskets/cerise_1.png",
 			"basket_2": "./assets/baskets/cerise_2.png",
 			"basket_3": "./assets/baskets/cerise_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"FRAMBOISE": {
 		"name": "Framboise",
@@ -74,10 +62,7 @@
 			"basket_1": "./assets/baskets/framboise_1.png",
 			"basket_2": "./assets/baskets/framboise_2.png",
 			"basket_3": "./assets/baskets/framboise_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"CITRON": {
 		"name": "Citron",
@@ -96,10 +81,7 @@
 			"basket_1": "./assets/baskets/citron_1.png",
 			"basket_2": "./assets/baskets/citron_2.png",
 			"basket_3": "./assets/baskets/citron_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"ORANGE": {
 		"name": "Orange",
@@ -112,10 +94,7 @@
 			"basket_1": "./assets/baskets/orange_1.png",
 			"basket_2": "./assets/baskets/orange_2.png",
 			"basket_3": "./assets/baskets/orange_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"GROSEILLE": {
 		"name": "Groseille",
@@ -128,10 +107,7 @@
 			"basket_1": "./assets/baskets/groseille_1.png",
 			"basket_2": "./assets/baskets/groseille_2.png",
 			"basket_3": "./assets/baskets/groseille_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"AMANDE": {
 		"name": "Amande",
@@ -144,10 +120,7 @@
 			"basket_1": "./assets/baskets/amande_1.png",
 			"basket_2": "./assets/baskets/amande_2.png",
 			"basket_3": "./assets/baskets/amande_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"PECHE": {
 		"name": "Pêche",
@@ -160,10 +133,7 @@
 			"basket_1": "./assets/baskets/peche_1.png",
 			"basket_2": "./assets/baskets/peche_2.png",
 			"basket_3": "./assets/baskets/peche_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"CANNELLE": {
 		"name": "Cannelle",
@@ -176,10 +146,7 @@
 			"basket_1": "./assets/baskets/cannelle_1.png",
 			"basket_2": "./assets/baskets/cannelle_2.png",
 			"basket_3": "./assets/baskets/cannelle_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"VANILLE": {
 		"name": "Vanille",
@@ -192,10 +159,7 @@
 			"basket_1": "./assets/baskets/vanille_1.png",
 			"basket_2": "./assets/baskets/vanille_2.png",
 			"basket_3": "./assets/baskets/vanille_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"FLEUR_ORANGER": {
 		"name": "Fleur d'oranger",
@@ -208,10 +172,7 @@
 			"basket_1": "./assets/baskets/fleur_oranger_1.png",
 			"basket_2": "./assets/baskets/fleur_oranger_2.png",
 			"basket_3": "./assets/baskets/fleur_oranger_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"VIOLETTE": {
 		"name": "Violette",
@@ -224,10 +185,7 @@
 			"basket_1": "./assets/baskets/violette_1.png",
 			"basket_2": "./assets/baskets/violette_2.png",
 			"basket_3": "./assets/baskets/violette_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"BERGAMOTE": {
 		"name": "Bergamote",
@@ -240,10 +198,7 @@
 			"basket_1": "./assets/baskets/bergamotte_1.png",
 			"basket_2": "./assets/baskets/bergamotte_2.png",
 			"basket_3": "./assets/baskets/bergamotte_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"BLEUET": {
 		"name": "Bleuet",
@@ -256,10 +211,7 @@
 			"basket_1": "./assets/baskets/bleuet_1.png",
 			"basket_2": "./assets/baskets/bleuet_2.png",
 			"basket_3": "./assets/baskets/bleuet_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"ANANAS": {
 		"name": "Ananas",
@@ -272,10 +224,7 @@
 			"basket_1": "./assets/baskets/ananas_1.png",
 			"basket_2": "./assets/baskets/ananas_2.png",
 			"basket_3": "./assets/baskets/ananas_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"CARTHAME": {
 		"name": "Carthame",
@@ -288,10 +237,7 @@
 			"basket_1": "./assets/baskets/carthame_1.png",
 			"basket_2": "./assets/baskets/carthame_2.png",
 			"basket_3": "./assets/baskets/carthame_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"JASMIN": {
 		"name": "Jasmin",
@@ -304,10 +250,7 @@
 			"basket_1": "./assets/baskets/jasmin_1.png",
 			"basket_2": "./assets/baskets/jasmin_2.png",
 			"basket_3": "./assets/baskets/jasmin_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"MENTHE": {
 		"name": "Menthe",
@@ -320,10 +263,7 @@
 			"basket_1": "./assets/baskets/menthe_1.png",
 			"basket_2": "./assets/baskets/menthe_2.png",
 			"basket_3": "./assets/baskets/menthe_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"NOIX_COCO": {
 		"name": "Noix de coco",
@@ -331,15 +271,12 @@
 		"url": {
 			"main": [{
 				"probability": 1,
-				"url": "./assets/ingredients/noix_de_coco.png"
+				"url": "./assets/ingredients/coco.png"
 			}],
 			"basket_1": "./assets/baskets/coco_1.png",
 			"basket_2": "./assets/baskets/coco_2.png",
 			"basket_3": "./assets/baskets/coco_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"ROSE": {
 		"name": "Rose",
@@ -352,10 +289,7 @@
 			"basket_1": "./assets/baskets/rose_1.png",
 			"basket_2": "./assets/baskets/rose_2.png",
 			"basket_3": "./assets/baskets/rose_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"RHUBARBE": {
 		"name": "Rhubarbe",
@@ -368,10 +302,7 @@
 			"basket_1": "./assets/baskets/rhubarbe_1.png",
 			"basket_2": "./assets/baskets/rhubarbe_2.png",
 			"basket_3": "./assets/baskets/rhubarbe_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"SAKURA": {
 		"name": "Sakura",
@@ -384,10 +315,7 @@
 			"basket_1": "./assets/baskets/sakura_1.png",
 			"basket_2": "./assets/baskets/sakura_2.png",
 			"basket_3": "./assets/baskets/sakura_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"SOUCIS": {
 		"name": "Soucis",
@@ -400,10 +328,7 @@
 			"basket_1": "./assets/baskets/soucis_1.png",
 			"basket_2": "./assets/baskets/soucis_2.png",
 			"basket_3": "./assets/baskets/soucis_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	},
 	"EPICES": {
 		"name": "Épices",
@@ -416,9 +341,6 @@
 			"basket_1": "./assets/baskets/epices_1.png",
 			"basket_2": "./assets/baskets/epices_2.png",
 			"basket_3": "./assets/baskets/epices_3.png"
-		},
-		"descriptions": [
-			"Aucune description"
-		]
+		}
 	}
 }
