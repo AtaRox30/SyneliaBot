@@ -1,6 +1,7 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const config = require('./config.json');
 const ingredients = require('./ingredients.json');
+const recipes = require('./recipes.json');
 
 const mongo = {
 	getGlobalInfo: async () => {
@@ -118,7 +119,8 @@ const mongo = {
 			{
 				"$push" : { "recipes" : 
 					{
-						"name" : recipe_key,
+						"code" : recipe_key,
+						"label" : recipes[recipe_key].name,
 						"xp": xp,
 						"time": new Date(new Date().toUTCString()).toISOString()
 					}
