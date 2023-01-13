@@ -291,6 +291,12 @@ const data = {
 			data: new SlashCommandBuilder().setName('infusion').setDescription('Infusion d\'un thé avec vos ingredients')
 				.addStringOption(option => option.setName('infusion-recipe').setDescription('Nom de la recette à infuser').setRequired(true).setAutocomplete(true)),
 			execute: async (client, interaction) => {
+				const channel = await twitch.getChannel();
+				if(!channel.is_live)
+				{
+					return await interaction.reply({ content: "Attends que ta streameuse préférée soit en live ! UwU", ephemeral: true });
+				}
+
 				const recipeKey = interaction.options.get('infusion-recipe').value;
 				if(Object.keys(recipes).includes(recipeKey))
 				{
