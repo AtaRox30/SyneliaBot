@@ -132,7 +132,8 @@ const mongo = {
 						"label": recipes[recipe_key].name,
 						"xp": xp,
 						"time": new Date(new Date().toUTCString()).toISOString(),
-						"is_finished": false
+						"is_finished": false,
+						"is_processing": false,
 					}
 				}
 			}
