@@ -8,7 +8,7 @@ function S4() {
 }
 
 function guid() {
-	return (auth.S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
+	return (S4() + S4() + "-" + S4() + "-4" + S4().slice(0,3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
 }
 
 const mongo = {
