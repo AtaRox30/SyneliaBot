@@ -3,6 +3,14 @@ const config = require('./config.json');
 const ingredients = require('./ingredients.json');
 const recipes = require('./recipes.json');
 
+function S4() {
+	return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+}
+
+function guid() {
+	return (auth.S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
+}
+
 const mongo = {
 	getGlobalInfo: async () => {
 		const clientDB = new MongoClient(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
@@ -119,10 +127,12 @@ const mongo = {
 			{
 				"$push" : { "recipes" : 
 					{
-						"code" : recipe_key,
-						"label" : recipes[recipe_key].name,
+						"id": guid(),
+						"code": recipe_key,
+						"label": recipes[recipe_key].name,
 						"xp": xp,
-						"time": new Date(new Date().toUTCString()).toISOString()
+						"time": new Date(new Date().toUTCString()).toISOString(),
+						"is_finished": false
 					}
 				}
 			}
