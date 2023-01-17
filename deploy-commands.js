@@ -107,14 +107,16 @@ const buildRecipeRecapString = async (client, userId) => {
 		const availableRecipes = tools.getAvailableRecipes(formedObject);
 		Object.entries(recipes).forEach(v => {
 			isFinishedOnAdd = false;
-			// :white_check_mark: [Anastasia] - 1 Vanille, 2 Violette, 1 Menthe
+			// :white_check_mark: [Anastasia] (3 XP) - 1 Vanille, 2 Violette, 1 Menthe
 			let ingr = '';
 			let isAvailable = false;
 			availableRecipes.filter(ar => ar[0] === v[0]).length ? isAvailable = true : '';
+			const tmpObj = {};
 			Object.entries(v[1].ingredients).forEach(i => {
 				ingr += ` - ${i[1]} ${ingredients[i[0]].name}`;
+				tmpObj[i[0]] = i[1];
 			});
-			const mess = `${isAvailable ? check : uncheck} [${v[1].name}]${ingr}\n`;
+			const mess = `${isAvailable ? check : uncheck} [${v[1].name}] (${tools.getXP(tmpObj)} XP)${ingr}\n`;
 			const isNotOkToAdd = charactersLen + mess.length > 2000;
 			if(isNotOkToAdd)
 			{
