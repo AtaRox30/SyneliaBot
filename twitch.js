@@ -61,8 +61,10 @@ const getVideoById = (at, id) => {
 }
 
 const getClipsPage = (at) => {
+	const now = new Date();
+	const fiveDayToNow = new Date(now.setDate(now.getDate() - 5));
 	const options = {
-		url: config.URL["TWITCH"]["GET_CLIPS"] + '?broadcaster_id=' + config["BROADCASTER"]["ID"] + '&sort=time',
+		url: config.URL["TWITCH"]["GET_CLIPS"] + '?broadcaster_id=' + config["BROADCASTER"]["ID"] + '&sort=time&started_at=' + fiveDayToNow.toISOString(),
 		json: true,
 		headers: {
 			'Client-Id': process.env.TWITCH_CLIENT_ID,
