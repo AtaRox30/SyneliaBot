@@ -5,6 +5,7 @@ const tools = require('./teaTools');
 const mongo = require('./mongo');
 const comfy = require('./comfy');
 const recipes = require('./recipes.json');
+const ingredients = require('./ingredients.json');
 
 const sendToAuthor = async (client, interaction, messageObject) => {
 	const user = interaction.user;
@@ -34,7 +35,7 @@ const buildEmbedIngredientsRecap = async (userId, page) => {
 		const drinker = await mongo.getDrinkerProfile({ "discordId" : userId });
 		if(!drinker)
 		{
-			rej({ success: false, error: 'NO_DRINKER' });
+			return rej({ success: false, error: 'NO_DRINKER' });
 		}
 		const url = [];
 		drinker.ingredients.slice((page - 1) * 9, page * 9).forEach(v => url.push(tools.buildBasket(v.code, v.amount)));
@@ -63,7 +64,7 @@ const buildEmbedRecipeRecap = async (userId, page) => {
 		const drinker = await mongo.getDrinkerProfile({ "discordId" : userId });
 		if(!drinker)
 		{
-			rej({ success: false, error: 'NO_DRINKER' });
+			return rej({ success: false, error: 'NO_DRINKER' });
 		}
 		const url = [];
 		Object.entries(recipes).slice((page - 1) * 5, page * 5).forEach(v => url.push(tools.buildTea(v[1].ingredients)));
@@ -85,6 +86,48 @@ const buildEmbedRecipeRecap = async (userId, page) => {
 			res({ success: true, embed: embedVerif, store: store, links: data, row: row, pagination: comps.length > 0 });
 		})
 		.catch(e => rej({ success: false, error: 'PROMISE_REJECTION', message: e }))
+	})
+}
+
+const buildRecipeRecapString = async (client, userId) => {
+	return new Promise(async (res, rej) => {
+		const drinker = await mongo.getDrinkerProfile({ "discordId" : userId });
+		if(!drinker)
+		{
+			return rej({ success: false, error: 'NO_DRINKER' });
+		}
+		let content = '';
+		const contents = [];
+		const check = '<:green_square:1064956827042840637>';
+		const uncheck = '<:red_square:1064956714086060172>';
+		let charactersLen = 0;
+		let isFinishedOnAdd = false;
+		const formedObject = {};
+		drinker.ingredients.forEach(v => formedObject[v.code] = v.amount);
+		const availableRecipes = tools.getAvailableRecipes(formedObject);
+		Object.entries(recipes).forEach(v => {
+			isFinishedOnAdd = false;
+			// :white_check_mark: [Anastasia] - 1 Vanille, 2 Violette, 1 Menthe
+			let ingr = '';
+			let isAvailable = false;
+			availableRecipes.filter(ar => ar[0] === v[0]).length ? isAvailable = true : '';
+			Object.entries(v[1].ingredients).forEach(i => {
+				ingr += ` - ${i[1]} ${ingredients[i[0]].name}`;
+			});
+			const mess = `${isAvailable ? check : uncheck} [${v[1].name}]${ingr}\n`;
+			const isNotOkToAdd = charactersLen + mess.length > 2000;
+			if(isNotOkToAdd)
+			{
+				contents.push(content);
+				content = '';
+				charactersLen = 0;
+				isFinishedOnAdd = true;
+			}
+			content += mess;
+			charactersLen += mess.length;
+		});
+		if(!isFinishedOnAdd) contents.push(content);
+		res({ success: true, content: contents });
 	})
 }
 
@@ -227,24 +270,11 @@ const data = {
 			execute: async (client, interaction) => {
 				try {
 					await interaction.deferReply({ ephemeral: true });
-					const result = await buildEmbedRecipeRecap(interaction.user.id, 1);
-					const message = {
-						content: "",
-						components: [result.row],
-						embeds: [result.embed],
-						files: [{
-							attachment: result.store,
-							name: 'store.png'
-						}]
-					};
-					if(!result.pagination) delete message.components;
+					
+					const result = await buildRecipeRecapString(client, interaction.user.id);
+					await result.content.forEach(async v => await sendToAuthor(client, interaction, { content:v, ephemeral: true }));
 
-					await sendToAuthor(client, interaction, message);
-
-					result.links.forEach(v => fs.unlink(v, function() {}))
-					fs.unlink(result.store, function() {});
-
-					await interaction.followUp({ content: 'Les recettes vous ont été envoyés en privé', ephemeral: true });
+					await interaction.followUp({ content: 'Les recettes vous ont été envoyées en privée', ephemeral: true });
 				} catch(e) {
 					if(e.error === 'NO_DRINKER')
 					{
