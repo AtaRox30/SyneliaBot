@@ -77,10 +77,10 @@ const distributePoint = async () => {
 	const chatters = await twitch.getChatters();
 	const drinkers = await mongo.getDrinkers();
 	const ret = [];
-	chatters.forEach(chatter => {
+	chatters.forEach(async chatter => {
 		const drinker = drinkers.filter(v => v.twitchId === chatter);
 		if(!drinker.length) return
-		mongo.incrementPoints(drinker[0].twitchId, drinker[0].points);
+		await mongo.incrementPoints(drinker[0].twitchId, drinker[0].points);
 		if(drinker[0].points >= 19) ret.push(drinker[0]);
 	});
 	return ret;
@@ -258,7 +258,7 @@ const notifyIngredientGot = (aToNotify) => {
 		const drinkerProfile = await mongo.getDrinkerProfile({ "twitchId" : drinker.twitchId });
 		const currentAmount = drinkerProfile.ingredients.filter(i => i.code === drinker.ingredient);
 		const ingrName = ingredients[drinker.ingredient].name;
-		const description = currentAmount.length === 0 ? `Vous récolté votre premier(ère) ${ingrName} !` : `Vous récolté votre ${currentAmount[0].amount}ème ${ingrName} !`;
+		const description = currentAmount.length === 0 ? `Vous récoltez votre premier(ère) ${ingrName} !` : `Vous récoltez votre ${currentAmount[0].amount}ème ${ingrName} !`;
 
 		const guild = client.guilds.cache.get(config["DISCORD"][process.env.PROFILE.toUpperCase()]["GUILD_ID"]);
 		const member = await guild.members.fetch(drinkerProfile.discordId);
@@ -380,7 +380,7 @@ client.on("ready", async () => {
 	}
     console.log("Discord bot ready");
 	twitchChecker();
-	// twitchChatChecker();
+	twitchChatChecker();
 });
 
 client.on(Events.InteractionCreate, async interaction => {
