@@ -205,6 +205,23 @@ const tea = {
 			return allChecked;
 		});
 	},
+	hasEnoughIngredients: (ingredientsObject, recipe_key) => {
+		/**
+		 * ingredientsObject → { ORANGE: 4, FRAMBOISE: 2 }
+		 * 
+		 * entries → [["ANASTASIA", { "name": "Anastasia", "ingredients": { CITRON: 1, FRAMBOISE: 2 } }]]
+		 * recipe_ingr → [["CITRON", 1], ["FRAMBOISE", 2]]
+		 */
+		if(!Object.keys(recipes).includes(recipe_key)) return false;
+		const recipe_ingr = Object.entries(recipes[recipe_key].ingredients);
+		let allChecked = true;
+		for(let [k, v] of recipe_ingr)
+		{
+			if(!ingredientsObject[k]) return false;
+			ingredientsObject[k] < v ? allChecked = false : undefined;
+		}
+		return allChecked;
+	},
 }
 
 module.exports = tea;

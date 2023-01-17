@@ -329,9 +329,24 @@ const data = {
 					return await interaction.reply({ content: "Attends que ta streameuse préférée soit en live ! UwU", ephemeral: true });
 				}
 
+				const drinker = await mongo.getDrinkerProfile({ "discordId" : userId });
+				if(!drinker)
+				{
+					return await interaction.reply({ content: "Vous devez tout d\'abord lié votre compte Twitch à Discord grâce à la commande /link <pseudo_twitch>", ephemeral: true });
+				}
+
 				const recipeKey = interaction.options.get('infusion-recipe').value;
 				if(Object.keys(recipes).includes(recipeKey))
 				{
+					
+					const formedObject = {};
+					drinker.ingredients.forEach(v => formedObject[v.code] = v.amount);
+					const hasEnoughIngredients = tools.hasEnoughIngredients(formedObject, recipeKey);
+					if(!hasEnoughIngredients)
+					{
+						return await interaction.reply({ content: "Vous n'avez pas assez d'ingredients pour infuser ce thé :c", ephemeral: true });
+					}
+
 					const user = await mongo.addRecipe(interaction.user.id, recipeKey, tools.getXP(recipes[recipeKey].ingredients));
 					await mongo.retreiveIngredients(interaction.user.id, recipes[recipeKey].ingredients);
 
