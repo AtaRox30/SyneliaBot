@@ -77,18 +77,20 @@ const distributePoint = async () => {
 	const chatters = await twitch.getChatters();
 	const drinkers = await mongo.getDrinkers();
 	const ret = [];
-	chatters.forEach(async chatter => {
+	for(const chatter of chatters)
+	{
 		const drinker = drinkers.filter(v => v.twitchId === chatter);
-		if(!drinker.length) return
+		if(!drinker.length) continue
 		await mongo.incrementPoints(drinker[0].twitchId, drinker[0].points);
 		if(drinker[0].points >= 19) ret.push(drinker[0]);
-	});
+	}
 	return ret;
 }
 
 const distributeIngredient = async (worthDrinkers) => {
 	const notifier = [];
-	worthDrinkers.forEach(async v => {
+	for(const v of worthDrinkers)
+	{
 		let haveAmount = true;
 		const ingredient = getRandomIngredient();
 		const currentIngredientStat = v.ingredients.filter(v => v.code === ingredient);
@@ -100,7 +102,7 @@ const distributeIngredient = async (worthDrinkers) => {
 		await mongo.resetPointFromDrinker({ "twitchId" : v.twitchId });
 		await mongo.incrementAmount(v.twitchId, ingredient, (haveAmount ? currentIngredientStat[0].amount : 0));
 		notifier.push({ "twitchId": v.twitchId, "ingredient": ingredient });
-	});
+	}
 	return notifier;
 }
 
