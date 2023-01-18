@@ -260,7 +260,7 @@ const notifyIngredientGot = (aToNotify) => {
 		const drinkerProfile = await mongo.getDrinkerProfile({ "twitchId" : drinker.twitchId });
 		const currentAmount = drinkerProfile.ingredients.filter(i => i.code === drinker.ingredient);
 		const ingrName = ingredients[drinker.ingredient].name;
-		const description = currentAmount.length === 0 ? `Vous récoltez votre premier(ère) ${ingrName} !` : `Vous récoltez votre ${currentAmount[0].amount}ème ${ingrName} !`;
+		const description = currentAmount.length === 1 ? `Vous récoltez votre premier(ère) ${ingrName} !` : `Vous récoltez votre ${currentAmount[0].amount}ème ${ingrName} !`;
 
 		const guild = client.guilds.cache.get(config["DISCORD"][process.env.PROFILE.toUpperCase()]["GUILD_ID"]);
 		const member = await guild.members.fetch(drinkerProfile.discordId);
