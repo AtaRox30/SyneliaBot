@@ -329,7 +329,7 @@ const data = {
 					return await interaction.reply({ content: "Attends que ta streameuse préférée soit en live ! UwU", ephemeral: true });
 				}
 
-				const drinker = await mongo.getDrinkerProfile({ "discordId" : userId });
+				const drinker = await mongo.getDrinkerProfile({ "discordId" : interaction.user.id });
 				if(!drinker)
 				{
 					return await interaction.reply({ content: "Vous devez tout d\'abord lié votre compte Twitch à Discord grâce à la commande /link <pseudo_twitch>", ephemeral: true });
