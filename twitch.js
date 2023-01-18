@@ -294,13 +294,13 @@ const twitch = {
 	getChatters: async () => {
 		const users = await getChatters();
 		const toRet = [
+			// ...users.chatters.broadcaster,
 			...users.chatters.viewers,
 			...users.chatters.global_mods,
 			...users.chatters.admins,
 			...users.chatters.staff,
 			...users.chatters.moderators,
-			...users.chatters.vips,
-			...users.chatters.broadcaster
+			...users.chatters.vips
 		];
 		return toRet;
 	},
