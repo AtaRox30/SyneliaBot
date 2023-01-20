@@ -277,7 +277,7 @@ const notifyIngredientGot = (aToNotify) => {
 			.setTimestamp()
 
 		await channelDisc.send({
-			content: `<@${drinkerProfile.discordId}>`,
+			content: "",
 			embeds: [exampleEmbed],
 			files: [{
 				attachment: ingredients[drinker.ingredient].url.main.filter(v => Math.random() < v.probability)[0].url,
